@@ -75,7 +75,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 .pg button{aspect-ratio:1;border:1px solid #0001;border-radius:6px;padding:0}
 #cw{position:absolute;left:0;top:0;transform-origin:0 0;background:#fff;box-shadow:0 4px 14px #0003;touch-action:none;cursor:crosshair}
 #cw canvas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
-#lys{position:absolute;inset:0;pointer-events:none}
+#lys{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 #cv{pointer-events:auto!important;touch-action:none;z-index:9}
 #selbar{position:absolute;top:8px;left:8px;display:flex;gap:4px;z-index:4}
 #selbar button{border:0;border-radius:99px;background:#fff;box-shadow:0 2px 8px #0003;padding:6px 12px;font-weight:600;font-size:13px;color:#4f46e5}
@@ -84,6 +84,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 .lr{display:flex;align-items:center;gap:2px;border:1px solid #e2e8f0;border-radius:10px;padding:2px 8px 2px 2px}
 .lr.on{background:#eef2ff;border-color:#4f46e5}
 .lr span{flex:1;padding:10px 4px;font-weight:600;font-size:14px;cursor:pointer}
+.lx{display:grid;grid-template-columns:70px 1fr;gap:4px 8px;align-items:center;font-size:12px;font-weight:600;padding:6px 8px 8px;border:1px solid #4f46e5;border-radius:10px;background:#f8fafc}.lx input{width:100%}
 #zr{width:auto;min-width:50px;padding:0 6px;font-size:12px;font-weight:600}
 #rw{position:fixed;left:12px;top:120px;width:200px;height:200px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 8px 24px #0004;z-index:15;display:flex;flex-direction:column;overflow:hidden;touch-action:none}
 #rh{display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:600;background:#f1f5f9;cursor:move;touch-action:none}
@@ -371,13 +372,13 @@ class History{
 constructor(w,h){this.w=w;this.h=h;this.past=[];this.fut=[];this.max=Math.max(5,Math.min(20,Math.floor(3e7/(w*h*4))))}
 st(id){
 const pv=this.past[this.past.length-1]
-return{a:S.cur.id,l:S.lay.map(y=>{if(y.ref)return{id:y.id,n:y.n,v:y.v,ref:y};const o=pv&&pv.l.find(z=>z.id===y.id);return{id:y.id,n:y.n,v:y.v,bg:y.bg,img:o&&id!=='*'&&y.id!==id?o.img:y.ctx.getImageData(0,0,this.w,this.h)}})}
+return{a:S.cur.id,l:S.lay.map(y=>{if(y.ref)return{id:y.id,n:y.n,v:y.v,ref:y};const o=pv&&pv.l.find(z=>z.id===y.id);return{id:y.id,n:y.n,v:y.v,bg:y.bg,op:y.op,img:o&&id!=='*'&&y.id!==id?o.img:y.ctx.getImageData(0,0,this.w,this.h)}})}
 }
 snap(id){this.fut=[];this.past.push(this.st(id));if(this.past.length>this.max)this.past.shift()}
 img(id){const s=this.past[this.past.length-1],e=s&&s.l.find(z=>z.id===id);return e&&e.img}
 go(s){
 const old=new Map(S.lay.map(y=>[y.id,y]))
-S.lay=s.l.map(e=>{if(e.ref){e.ref.n=e.n;e.ref.v=e.v;return e.ref}const y=old.get(e.id)||mkLayer(e.id,e.n,e.bg);y.n=e.n;y.v=e.v;y.ctx.putImageData(e.img,0,0);return y})
+S.lay=s.l.map(e=>{if(e.ref){e.ref.n=e.n;e.ref.v=e.v;return e.ref}const y=old.get(e.id)||mkLayer(e.id,e.n,e.bg);y.n=e.n;y.v=e.v;y.op=e.op;y.cv.style.opacity=y.op/100;y.ctx.putImageData(e.img,0,0);return y})
 if(!S.lay.includes(S.cur))S.cur=S.lay.find(y=>y.id===s.a)||S.lay[S.lay.length-1]
 relayer()
 }
@@ -496,14 +497,38 @@ applyV()
 const refresh=()=>{$('#undo').disabled=!S.hist.canUndo;$('#redo').disabled=!S.hist.canRedo}
 const tmps=[]
 const tmp=i=>{const c=tmps[i]||(tmps[i]=document.createElement('canvas'));c.width=S.w;c.height=S.h;return c}
-const hs=id=>{S.hist.snap(id);refresh()}
+const hs=id=>{S.hist.snap(id);refresh();markDirty(id);queueSave()}
 const hd=()=>hs(S.cur.id)
+const AS={t:0,p:false,all:false,dirty:new Set}
+const markDirty=id=>{if(id==='*')AS.all=true;else if(id!==undefined)AS.dirty.add(id)}
+const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('kanvas-db',1);r.onupgradeneeded=()=>r.result.createObjectStore('p');r.onsuccess=()=>ok(r.result);r.onerror=()=>no()})
+const dbPut=async v=>{try{const d=await idb();d.transaction('p','readwrite').objectStore('p').put(v,'solo')}catch(x){}}
+const dbDel=async()=>{try{const d=await idb();d.transaction('p','readwrite').objectStore('p').delete('solo')}catch(x){}}
+const dbGet=async()=>{try{const d=await idb();return await new Promise(ok=>{const q=d.transaction('p').objectStore('p').get('solo');q.onsuccess=()=>ok(q.result);q.onerror=()=>ok(null)})}catch(x){return null}}
+const saveNow=async()=>{
+if(S.duo||!S.hist||S.over)return
+clearTimeout(AS.t)
+if(S.loc.active||S.aid!==null){AS.t=setTimeout(saveNow,2000);return}
+AS.p=false
+const all=AS.all,ds=AS.dirty;AS.all=false;AS.dirty=new Set
+try{
+const l=[]
+for(const y of S.lay){
+if(all||ds.has(y.id)||!y.blob)y.blob=await new Promise(ok=>y.cv.toBlob(ok,'image/png'))
+l.push({id:y.id,n:y.n,v:y.v,bg:y.bg,ref:!!y.ref,op:y.op,tf:y.tf,blob:y.blob})
+}
+await dbPut({w:S.w,h:S.h,nid:S.nid,a:S.cur.id,l})
+}catch(x){}
+}
+const queueSave=()=>{if(S.duo)return;AS.p=true;clearTimeout(AS.t);AS.t=setTimeout(saveNow,4000)}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&AS.p)saveNow()})
+const applyTf=y=>{const t=y.tf;y.cv.style.transform='translate('+t.x+'%,'+t.y+'%) rotate('+t.r+'deg) scale('+t.s/100+')'}
 const mkLayer=(id,n,bg)=>{
 const c=document.createElement('canvas')
 c.width=S.w;c.height=S.h
 const x=c.getContext('2d')
 if(bg){x.fillStyle='#fff';x.fillRect(0,0,S.w,S.h)}
-return{id,n,v:true,bg,cv:c,ctx:x}
+return{id,n,v:true,bg,cv:c,ctx:x,op:100}
 }
 const relayer=()=>{
 $('#lys').replaceChildren(...S.lay.map(y=>y.cv))
@@ -515,7 +540,8 @@ const t=n?document.createElement('canvas'):tmp(2)
 t.width=S.w;t.height=S.h
 const g=t.getContext('2d')
 g.fillStyle='#fff';g.fillRect(0,0,S.w,S.h)
-S.lay.forEach(y=>{if(y.v&&!y.ref)g.drawImage(y.cv,0,0)})
+S.lay.forEach(y=>{if(y.v&&!y.ref){g.globalAlpha=y.op/100;g.drawImage(y.cv,0,0)}})
+g.globalAlpha=1
 return t
 }
 const setSel=m=>{
@@ -724,12 +750,13 @@ mid.addEventListener('pointercancel',mup)
 mid.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,V.z*Math.exp(-e.deltaY*.0015))},{passive:false})
 $('#zr').onclick=fit
 
-const doUndo=()=>{if(S.hist.undo()){refresh();queueSync()}}
-const doRedo=()=>{if(S.hist.redo()){refresh();queueSync()}}
+const doUndo=()=>{if(S.hist.undo()){refresh();queueSync();AS.all=true;queueSave()}}
+const doRedo=()=>{if(S.hist.redo()){refresh();queueSync();AS.all=true;queueSave()}}
 $('#undo').onclick=doUndo
 $('#redo').onclick=doRedo
 $('#clr').onclick=()=>dialog('Hapus semua?','Seluruh gambar akan dihapus.',[['Batal'],['Hapus',()=>{S.lay.forEach(y=>{if(y.ref)return;y.ctx.globalAlpha=1;if(y.bg){y.ctx.fillStyle='#fff';y.ctx.fillRect(0,0,S.w,S.h)}else y.ctx.clearRect(0,0,S.w,S.h)});hs('*')},1]])
-$('#dl').onclick=()=>flat(1).toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kanvas-'+Date.now()+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},'image/png')
+const dlFlat=(t,q,x)=>flat(1).toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kanvas-'+Date.now()+'.'+x;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},t,q)
+$('#dl').onclick=()=>dialog('Unduh gambar','Pilih format',[['Batal'],['JPG',()=>dlFlat('image/jpeg',.92,'jpg')],['PNG',()=>dlFlat('image/png',undefined,'png'),1]])
 $('#exit').onclick=()=>dialog('Keluar?','Gambar yang belum diunduh akan hilang.',[['Batal'],['Keluar',exitStudio,1]])
 $('#chb').onclick=()=>{const c=$('#chat');c.classList.toggle('hide');if(!c.classList.contains('hide')){S.unread=0;badge();$('#msgs').scrollTop=1e9}}
 $('#cf').onsubmit=e=>{
@@ -888,6 +915,7 @@ $('#spd').classList.remove('hide')
 }
 $('#spd').onclick=e=>{if(e.target===e.currentTarget||e.target.closest('#sx'))$('#spd').classList.add('hide')}
 
+const sld=(p,l,mn,mx,v,f,c)=>{const a=document.createElement('span'),i=document.createElement('input');a.textContent=l;i.type='range';i.min=mn;i.max=mx;i.value=v;i.oninput=()=>f(+i.value);i.onchange=c;p.append(a,i)}
 const drawLP=()=>{
 const b=$('#lr')
 b.innerHTML=''
@@ -896,11 +924,33 @@ const y=S.lay[i],r=document.createElement('div')
 r.className='lr'+(y===S.cur?' on':'')
 r.innerHTML='<button class="ib">'+ic(y.v?'eye':'eyeoff')+'</button><span></span>'
 r.children[1].textContent=(y.ref?'\u25A3 ':'')+y.n
-if(y.ref){const o=document.createElement('input');o.type='range';o.min=10;o.max=100;o.value=y.op;o.style.width='70px';o.oninput=()=>{y.op=+o.value;y.cv.style.opacity=y.op/100};r.appendChild(o)}
 r.children[0].onclick=()=>{y.v=!y.v;relayer();hs();drawLP()}
 r.children[1].onclick=()=>{S.cur=y;relayer();drawLP()}
 b.appendChild(r)
+if(y!==S.cur)continue
+const x=document.createElement('div');x.className='lx'
+sld(x,'Opasitas',5,100,y.op,v=>{y.op=v;y.cv.style.opacity=v/100},()=>hs())
+if(y.ref)[['Ukuran',20,300,'s'],['Geser X',-100,100,'x'],['Geser Y',-100,100,'y'],['Putar',-180,180,'r']].forEach(([l,mn,mx,k])=>sld(x,l,mn,mx,y.tf[k],v=>{y.tf[k]=v;applyTf(y)},()=>hs()))
+const q=document.createElement('div');q.className='row';q.style.gridColumn='1/3'
+;[['Nama',ren],['Salin',dup],...(y.ref?[]:[['Gabung',mrg]])].forEach(([l,f])=>{const t=document.createElement('button');t.className='btn';t.style.cssText='padding:6px 10px;font-size:12px';t.textContent=l;t.onclick=f;q.appendChild(t)})
+x.appendChild(q);b.appendChild(x)
 }
+}
+const ren=()=>{const n=prompt('Nama layer',S.cur.n);if(n&&n.trim()){S.cur.n=n.trim().slice(0,20);hs();drawLP()}}
+const dup=()=>{
+if(S.lay.length>=12)return toast('Maksimal 12 layer')
+const o=S.cur,y=mkLayer(++S.nid,o.n.slice(0,14)+' salin',false)
+y.ctx.drawImage(o.cv,0,0);y.op=o.op;y.cv.style.opacity=y.op/100;y.v=o.v
+if(o.ref){y.ref=true;y.tf={...o.tf};applyTf(y)}
+S.lay.splice(S.lay.indexOf(o)+1,0,y);S.cur=y
+relayer();hs(y.id);drawLP()
+}
+const mrg=()=>{
+const i=S.lay.indexOf(S.cur),d=S.lay[i-1]
+if(i<1||d.ref)return toast('Tidak bisa digabung')
+if(S.cur.v){d.ctx.globalAlpha=S.cur.op/100;d.ctx.drawImage(S.cur.cv,0,0);d.ctx.globalAlpha=1}
+S.lay.splice(i,1);S.cur=d
+relayer();hs(d.id);drawLP()
 }
 $('#lb').onclick=()=>{drawLP();$('#lpd').classList.remove('hide')}
 $('#lpd').onclick=e=>{if(e.target===e.currentTarget||e.target.closest('#lx'))$('#lpd').classList.add('hide')}
@@ -930,7 +980,7 @@ if(!f)return
 const u=URL.createObjectURL(f),im=new Image()
 im.onload=()=>{
 const y=mkLayer(++S.nid,'Galeri '+S.nid,false)
-y.ref=true;y.op=50;y.cv.style.opacity='.5'
+y.ref=true;y.op=50;y.cv.style.opacity='.5';y.tf={s:100,x:0,y:0,r:0}
 const k=Math.min(S.w/im.naturalWidth,S.h/im.naturalHeight),w=im.naturalWidth*k,h=im.naturalHeight*k
 y.ctx.drawImage(im,(S.w-w)/2,(S.h-h)/2,w,h)
 URL.revokeObjectURL(u)
@@ -1078,7 +1128,27 @@ const dropPend=()=>{if(pend){clearTimeout(pend.t1);clearTimeout(pend.t2);pend.es
 const cancelPair=()=>{if(pend&&pend.link)pend.link.close();dropPend();show('menu')}
 $('#back').onclick=cancelPair
 
-$('#solo').onclick=()=>{const[w,h]=sizeVal();startStudio({mode:'solo',w,h},null)}
+const restore=async d=>{
+startStudio({mode:'solo',w:d.w,h:d.h},null)
+try{
+const ls=[]
+for(const e of d.l){
+const y=mkLayer(e.id,e.n,e.bg),b=await createImageBitmap(e.blob)
+y.ctx.globalCompositeOperation='copy';y.ctx.drawImage(b,0,0);y.ctx.globalCompositeOperation='source-over'
+if(b.close)b.close()
+y.v=e.v;y.op=e.op;y.cv.style.opacity=y.op/100;y.blob=e.blob
+if(e.ref){y.ref=true;y.tf=e.tf;applyTf(y)}
+ls.push(y)
+}
+S.lay=ls;S.nid=d.nid;S.cur=ls.find(y=>y.id===d.a)||ls.find(y=>!y.ref)
+relayer();S.hist=new History(S.w,S.h);S.hist.snap();refresh();drawLP()
+}catch(x){toast('Gagal memuat gambar tersimpan')}
+}
+$('#solo').onclick=async()=>{
+const[w,h]=sizeVal(),go=()=>startStudio({mode:'solo',w,h},null),d=await dbGet()
+if(!d)return go()
+dialog('Lanjutkan gambar?','Ada gambar yang tersimpan otomatis.',[['Baru',()=>{dbDel();go()}],['Lanjutkan',()=>restore(d),1]])
+}
 
 $('#host').onclick=async()=>{
 const[w,h]=sizeVal(),link=new Link(),code=randCode(),dur=+$('#dur').value*60,me=prof()
