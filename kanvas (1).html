@@ -197,7 +197,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 <p>Awal dan Akhir mengatur panjang ujung runcing pada pulpen, pensil, kuas lembut, dan penghapus. Toleransi dipakai oleh tongkat sihir.</p>
 </div>
 </div>
-<div id="lpd" class="hide"><div class="pn"><div class="ph"><h2>Layer</h2><button class="ib" id="lx" data-i="x" aria-label="Tutup"></button></div><div id="lr"></div><div class="row" style="justify-content:space-between"><button class="btn" id="la">+ Tambah</button><button class="btn" id="ld">Hapus</button><button class="ib" id="lu" data-i="up" aria-label="Naik"></button><button class="ib" id="lw" data-i="down" aria-label="Turun"></button></div></div></div>
+<div id="lpd" class="hide"><div class="pn"><div class="ph"><h2>Layer</h2><button class="ib" id="lx" data-i="x" aria-label="Tutup"></button></div><div id="lr"></div><button class="btn" id="lg">Galeri</button><input type="file" id="lgf" accept="image/*" class="hide"><div class="row" style="justify-content:space-between"><button class="btn" id="la">+ Tambah</button><button class="btn" id="ld">Hapus</button><button class="ib" id="lu" data-i="up" aria-label="Naik"></button><button class="ib" id="lw" data-i="down" aria-label="Turun"></button></div></div></div>
 <div id="rw" class="hide"><div id="rh"><span>Referensi</span><button class="ib" id="rl" data-i="image" aria-label="Muat gambar"></button><button class="ib" id="rc" data-i="x" aria-label="Tutup"></button></div><canvas id="rf"></canvas><div id="rg"></div><input type="file" id="rfi" accept="image/*" class="hide"></div>
 <div id="rv" class="hide"><div class="pn" style="max-width:480px"><div class="ph"><h2>Hasil Gambar</h2></div><div id="rvc"></div><div class="row"><button class="btn pri" id="rx">Keluar</button></div></div></div>
 <div id="bd" class="hide"></div>
@@ -371,13 +371,13 @@ class History{
 constructor(w,h){this.w=w;this.h=h;this.past=[];this.fut=[];this.max=Math.max(5,Math.min(20,Math.floor(3e7/(w*h*4))))}
 st(id){
 const pv=this.past[this.past.length-1]
-return{a:S.cur.id,l:S.lay.map(y=>{const o=pv&&pv.l.find(z=>z.id===y.id);return{id:y.id,n:y.n,v:y.v,bg:y.bg,img:o&&id!=='*'&&y.id!==id?o.img:y.ctx.getImageData(0,0,this.w,this.h)}})}
+return{a:S.cur.id,l:S.lay.map(y=>{if(y.ref)return{id:y.id,n:y.n,v:y.v,ref:y};const o=pv&&pv.l.find(z=>z.id===y.id);return{id:y.id,n:y.n,v:y.v,bg:y.bg,img:o&&id!=='*'&&y.id!==id?o.img:y.ctx.getImageData(0,0,this.w,this.h)}})}
 }
 snap(id){this.fut=[];this.past.push(this.st(id));if(this.past.length>this.max)this.past.shift()}
 img(id){const s=this.past[this.past.length-1],e=s&&s.l.find(z=>z.id===id);return e&&e.img}
 go(s){
 const old=new Map(S.lay.map(y=>[y.id,y]))
-S.lay=s.l.map(e=>{const y=old.get(e.id)||mkLayer(e.id,e.n,e.bg);y.n=e.n;y.v=e.v;y.ctx.putImageData(e.img,0,0);return y})
+S.lay=s.l.map(e=>{if(e.ref){e.ref.n=e.n;e.ref.v=e.v;return e.ref}const y=old.get(e.id)||mkLayer(e.id,e.n,e.bg);y.n=e.n;y.v=e.v;y.ctx.putImageData(e.img,0,0);return y})
 if(!S.lay.includes(S.cur))S.cur=S.lay.find(y=>y.id===s.a)||S.lay[S.lay.length-1]
 relayer()
 }
@@ -508,14 +508,14 @@ return{id,n,v:true,bg,cv:c,ctx:x}
 const relayer=()=>{
 $('#lys').replaceChildren(...S.lay.map(y=>y.cv))
 S.lay.forEach(y=>{y.cv.style.display=y.v?'':'none'})
-S.ctx=S.cur.ctx;S.loc.setLayer(S.cur);S.rem.setLayer(S.cur)
+S.ctx=S.cur.ctx;S.loc.setLayer(S.cur);S.rem.setLayer(S.cur.ref?S.lay.find(y=>!y.ref):S.cur)
 }
 const flat=n=>{
 const t=n?document.createElement('canvas'):tmp(2)
 t.width=S.w;t.height=S.h
 const g=t.getContext('2d')
 g.fillStyle='#fff';g.fillRect(0,0,S.w,S.h)
-S.lay.forEach(y=>{if(y.v)g.drawImage(y.cv,0,0)})
+S.lay.forEach(y=>{if(y.v&&!y.ref)g.drawImage(y.cv,0,0)})
 return t
 }
 const setSel=m=>{
@@ -544,6 +544,7 @@ ov.style.maskSize=ov.style.webkitMaskSize='100% 100%'
 $('#selbar').classList.remove('hide')
 }
 const maskFill=color=>{
+if(S.cur.ref)return toast('Layer galeri hanya referensi')
 const t=tmp(0),g=t.getContext('2d')
 g.fillStyle=color||'#fff';g.fillRect(0,0,S.w,S.h)
 g.globalCompositeOperation='destination-in';g.drawImage(S.sel.cv,0,0)
@@ -664,6 +665,7 @@ hd()
 const abort=()=>{finish();doUndo();S.hist.fut=[]}
 cv.addEventListener('pointerdown',e=>{
 if(S.over||S.aid!==null||tap||(e.pointerType==='touch'&&!e.isPrimary)||(e.pointerType==='mouse'&&e.button!==0))return
+if(S.cur.ref)return toast('Layer galeri hanya referensi')
 rect=cv.getBoundingClientRect()
 const{x,y}=point(e,rect)
 if(S.tool==='wand'||S.tool==='fill'){
@@ -726,7 +728,7 @@ const doUndo=()=>{if(S.hist.undo()){refresh();queueSync()}}
 const doRedo=()=>{if(S.hist.redo()){refresh();queueSync()}}
 $('#undo').onclick=doUndo
 $('#redo').onclick=doRedo
-$('#clr').onclick=()=>dialog('Hapus semua?','Seluruh gambar akan dihapus.',[['Batal'],['Hapus',()=>{S.lay.forEach(y=>{y.ctx.globalAlpha=1;if(y.bg){y.ctx.fillStyle='#fff';y.ctx.fillRect(0,0,S.w,S.h)}else y.ctx.clearRect(0,0,S.w,S.h)});hs('*')},1]])
+$('#clr').onclick=()=>dialog('Hapus semua?','Seluruh gambar akan dihapus.',[['Batal'],['Hapus',()=>{S.lay.forEach(y=>{if(y.ref)return;y.ctx.globalAlpha=1;if(y.bg){y.ctx.fillStyle='#fff';y.ctx.fillRect(0,0,S.w,S.h)}else y.ctx.clearRect(0,0,S.w,S.h)});hs('*')},1]])
 $('#dl').onclick=()=>flat(1).toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kanvas-'+Date.now()+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},'image/png')
 $('#exit').onclick=()=>dialog('Keluar?','Gambar yang belum diunduh akan hilang.',[['Batal'],['Keluar',exitStudio,1]])
 $('#chb').onclick=()=>{const c=$('#chat');c.classList.toggle('hide');if(!c.classList.contains('hide')){S.unread=0;badge();$('#msgs').scrollTop=1e9}}
@@ -893,7 +895,8 @@ for(let i=S.lay.length-1;i>=0;i--){
 const y=S.lay[i],r=document.createElement('div')
 r.className='lr'+(y===S.cur?' on':'')
 r.innerHTML='<button class="ib">'+ic(y.v?'eye':'eyeoff')+'</button><span></span>'
-r.children[1].textContent=y.n
+r.children[1].textContent=(y.ref?'\u25A3 ':'')+y.n
+if(y.ref){const o=document.createElement('input');o.type='range';o.min=10;o.max=100;o.value=y.op;o.style.width='70px';o.oninput=()=>{y.op=+o.value;y.cv.style.opacity=y.op/100};r.appendChild(o)}
 r.children[0].onclick=()=>{y.v=!y.v;relayer();hs();drawLP()}
 r.children[1].onclick=()=>{S.cur=y;relayer();drawLP()}
 b.appendChild(r)
@@ -908,9 +911,10 @@ S.lay.splice(S.lay.indexOf(S.cur)+1,0,y);S.cur=y
 relayer();hs();drawLP()
 }
 $('#ld').onclick=()=>{
-if(S.lay.length<2)return toast('Minimal satu layer')
+if(!S.cur.ref&&S.lay.filter(y=>!y.ref).length<2)return toast('Minimal satu layer')
 const i=S.lay.indexOf(S.cur)
 S.lay.splice(i,1);S.cur=S.lay[Math.max(0,i-1)]
+if(S.cur.ref)S.cur=S.lay.find(y=>!y.ref)
 relayer();hs();drawLP()
 }
 const mv=d=>{
@@ -918,6 +922,23 @@ const i=S.lay.indexOf(S.cur),j=i+d
 if(j<0||j>=S.lay.length)return
 ;[S.lay[i],S.lay[j]]=[S.lay[j],S.lay[i]]
 relayer();hs();drawLP()
+}
+$('#lg').onclick=()=>{if(S.lay.length>=12)return toast('Maksimal 12 layer');$('#lgf').click()}
+$('#lgf').onchange=e=>{
+const f=e.target.files[0];e.target.value=''
+if(!f)return
+const u=URL.createObjectURL(f),im=new Image()
+im.onload=()=>{
+const y=mkLayer(++S.nid,'Galeri '+S.nid,false)
+y.ref=true;y.op=50;y.cv.style.opacity='.5'
+const k=Math.min(S.w/im.naturalWidth,S.h/im.naturalHeight),w=im.naturalWidth*k,h=im.naturalHeight*k
+y.ctx.drawImage(im,(S.w-w)/2,(S.h-h)/2,w,h)
+URL.revokeObjectURL(u)
+S.lay.splice(S.lay.indexOf(S.cur)+1,0,y)
+relayer();hs();drawLP()
+}
+im.onerror=()=>{URL.revokeObjectURL(u);toast('Gambar gagal dimuat')}
+im.src=u
 }
 $('#lu').onclick=()=>mv(1)
 $('#lw').onclick=()=>mv(-1)
