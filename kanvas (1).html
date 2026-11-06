@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>WG art of fighter</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:none;user-select:none;-webkit-user-select:none;font:15px system-ui,sans-serif;background:#f1f5f9;color:#1e293b}
+.scr{position:fixed;inset:0;display:flex;flex-direction:column}
+.hide{display:none!important}
+#menu,#pair{align-items:center;justify-content:center;padding:16px;background:linear-gradient(135deg,#f8fafc,#fff,#eef2ff)}
+.card{width:100%;max-width:420px;background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;box-shadow:0 10px 30px #0001;display:flex;flex-direction:column;gap:12px}
+h1,h2{margin:0}
+h1{font-size:26px;text-align:center}
+p{margin:0;font-size:13px;color:#64748b}
+button,select,textarea{font:inherit}
+.btn{border:1px solid #e2e8f0;background:#fff;border-radius:10px;padding:12px;font-weight:600;color:#1e293b;cursor:pointer}
+.btn.pri{background:#4f46e5;border-color:#4f46e5;color:#fff}
+.btn:disabled{opacity:.4}
+select,textarea{width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:10px;background:#fff;color:#0f172a}
+textarea{height:96px;resize:none;font:11px monospace;user-select:text;-webkit-user-select:text;touch-action:pan-y;overflow:auto}
+#top,#cols{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:5px 8px;background:#fff;border-bottom:1px solid #e2e8f0}
+.ib{width:36px;height:36px;border:0;border-radius:8px;background:none;color:#475569;cursor:pointer;position:relative}
+.ib:active{background:#f1f5f9}
+.ib:disabled{opacity:.3}
+.sp{flex:1}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block;margin:auto;pointer-events:none}
+.logo{display:flex;align-items:center;justify-content:center;gap:12px}
+.logo span{width:44px;height:44px;border-radius:12px;background:#4f46e5;color:#fff;display:grid;place-items:center;box-shadow:0 6px 16px #4f46e555}
+.logo svg{width:24px;height:24px}
+#st{font-size:12px;color:#b45309;padding:0 6px}
+#st.ok{color:#047857}
+#mid{flex:1;min-height:0;position:relative;overflow:hidden;background:#e2e8f0;touch-action:none}
+#tools{display:flex;gap:2px;padding:4px;background:#fff;border-top:1px solid #e2e8f0;padding-bottom:max(4px,env(safe-area-inset-bottom))}
+#tools button{flex:1;max-width:56px;height:44px;border:0;border-radius:12px;background:none;color:#475569;cursor:pointer}
+#tools button.on{background:#4f46e5;color:#fff;box-shadow:0 3px 8px #4f46e566}
+#toast{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:8px 14px;border-radius:99px;font-size:13px;pointer-events:none}
+#chat{position:absolute;inset:auto 0 0 0;height:50%;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -8px 24px #0002;display:flex;flex-direction:column;z-index:5}
+#msgs{flex:1;overflow-y:auto;touch-action:pan-y;padding:10px;display:flex;flex-direction:column;gap:6px}
+.m{max-width:85%;padding:6px 12px;border-radius:16px;background:#f1f5f9;align-self:flex-start;word-break:break-word}
+.m.me{background:#4f46e5;color:#fff;align-self:flex-end}
+#cf{display:flex;gap:6px;padding:8px;border-top:1px solid #e2e8f0}
+#cf input{flex:1;min-width:0;border:1px solid #e2e8f0;border-radius:8px;padding:8px;font:inherit;user-select:text;-webkit-user-select:text}
+#bd{position:fixed;inset:0;background:#0f172a88;display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+#bd .card{max-width:340px}
+.row{display:flex;gap:8px;justify-content:flex-end}
+#code,#jin{text-align:center;font:700 34px monospace;letter-spacing:.35em;padding:12px 0 12px .35em;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;color:#0f172a;width:100%;user-select:text;-webkit-user-select:text}
+#jin{background:#fff;text-transform:uppercase}
+#cbtn{width:36px;height:36px;border-radius:50%;border:3px solid #cbd5e1;box-shadow:inset 0 0 0 2px #fff;padding:0;background:#111827;cursor:pointer;flex:none}
+#cols input[type=range]{flex:1;min-width:0;accent-color:#4f46e5}
+#cpd,#spd,#lpd{position:fixed;inset:0;background:#0f172a66;display:flex;align-items:center;justify-content:center;padding:10px;z-index:30}
+.pn{width:100%;max-width:400px;max-height:100%;background:#fff;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;overflow:hidden;box-shadow:0 20px 50px #0004}
+.ph{display:flex;align-items:center;gap:8px}
+.ph h2{flex:1;font-size:18px}
+#pv{display:flex;width:84px;height:30px;border-radius:99px;overflow:hidden;border:1px solid #e2e8f0}
+#pv i{flex:1}
+#wb{display:flex;justify-content:center}
+#wh{width:min(100%,34dvh);aspect-ratio:1;touch-action:none}
+#hx{align-self:center;font:600 15px monospace;letter-spacing:.1em;background:#f1f5f9;border-radius:99px;padding:5px 16px}
+#ct{display:flex;background:#f1f5f9;border-radius:10px;padding:3px}
+#ct button{flex:1;border:0;background:none;border-radius:8px;padding:8px;font-weight:600;color:#64748b}
+#ct button.on{background:#fff;color:#4f46e5;box-shadow:0 1px 3px #0002}
+#cr,#sr{display:flex;flex-direction:column;justify-content:center;gap:12px}
+#cr{min-height:130px}
+.rw{display:flex;align-items:center;gap:8px}
+.rw span{min-width:56px;font-size:13px;color:#475569}
+.rw b{width:32px;text-align:right;font-weight:600;font-size:13px}
+.rw button{width:30px;height:30px;flex:none;border-radius:50%;border:1px solid #cbd5e1;background:#fff;color:#334155;padding:0}
+.rw svg{width:16px;height:16px;stroke-width:2.5}
+.rw input{flex:1;min-width:0;-webkit-appearance:none;appearance:none;height:10px;border-radius:5px;margin:0;outline:0;background:#e2e8f0}
+.rw input::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid #4f46e5;box-shadow:0 1px 4px #0004}
+.rw input::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #4f46e5}
+.pg{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}
+.pg button{aspect-ratio:1;border:1px solid #0001;border-radius:6px;padding:0}
+#cw{position:absolute;left:0;top:0;transform-origin:0 0;background:#fff;box-shadow:0 4px 14px #0003;touch-action:none;cursor:crosshair}
+#cw canvas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+#lys{position:absolute;inset:0;pointer-events:none}
+#cv{pointer-events:auto!important;touch-action:none;z-index:9}
+#selbar{position:absolute;top:8px;left:8px;display:flex;gap:4px;z-index:4}
+#selbar button{border:0;border-radius:99px;background:#fff;box-shadow:0 2px 8px #0003;padding:6px 12px;font-weight:600;font-size:13px;color:#4f46e5}
+.badge{position:absolute;top:0;right:0;background:#ef4444;color:#fff;border-radius:99px;font-size:10px;padding:1px 5px}
+#lr{display:flex;flex-direction:column;gap:4px;max-height:42dvh;overflow-y:auto;touch-action:pan-y}
+.lr{display:flex;align-items:center;gap:2px;border:1px solid #e2e8f0;border-radius:10px;padding:2px 8px 2px 2px}
+.lr.on{background:#eef2ff;border-color:#4f46e5}
+.lr span{flex:1;padding:10px 4px;font-weight:600;font-size:14px;cursor:pointer}
+#zr{width:auto;min-width:50px;padding:0 6px;font-size:12px;font-weight:600}
+#rw{position:fixed;left:12px;top:120px;width:200px;height:200px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 8px 24px #0004;z-index:15;display:flex;flex-direction:column;overflow:hidden;touch-action:none}
+#rh{display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:600;background:#f1f5f9;cursor:move;touch-action:none}
+#rh span{flex:1}
+#rh .ib{width:30px;height:30px}
+#rf{flex:1;min-height:0;width:100%;display:block;cursor:crosshair}
+#rg{position:absolute;right:0;bottom:0;width:28px;height:28px;cursor:nwse-resize;touch-action:none;background:linear-gradient(135deg,transparent 50%,#94a3b8 50%)}
+#av,.av{width:44px;height:44px;border-radius:50%;border:2px solid #e2e8f0;background-size:cover;background-position:center;color:#fff;font-weight:700;font-size:18px;flex:none;padding:0;display:grid;place-items:center;overflow:hidden}
+.prof{display:flex;gap:10px;align-items:center}
+#nm{flex:1;min-width:0;border:1px solid #e2e8f0;border-radius:10px;padding:10px;font:inherit;user-select:text;-webkit-user-select:text}
+#tm{font:700 13px monospace;padding:0 4px}
+#fn{border:0;border-radius:8px;background:#ef4444;color:#fff;font-weight:600;padding:6px 10px}
+#rv{position:fixed;inset:0;background:#0f172a99;display:flex;align-items:center;justify-content:center;padding:10px;z-index:40}
+#rvc{display:flex;flex-direction:column;gap:12px;overflow-y:auto;touch-action:pan-y;max-height:68dvh}
+.rc{border:1px solid #e2e8f0;border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px}
+.rc .hd{display:flex;align-items:center;gap:8px;font-weight:700}
+.rc img{width:100%;border-radius:8px;border:1px solid #e2e8f0;background:#fff}
+.rc .ph2{padding:30px 0;text-align:center;color:#64748b;font-size:13px}
+</style>
+</head>
+<body>
+<div id="menu" class="scr">
+<div class="card">
+<div class="logo"><span data-i="logo"></span><h1>Kanvas</h1></div>
+<p style="text-align:center">Menggambar solo atau bareng teman</p>
+<div class="prof"><button id="av" aria-label="Foto profil"></button><input id="nm" maxlength="14" placeholder="Nama kamu" autocomplete="off"></div><input type="file" id="avf" accept="image/*" class="hide">
+<select id="size">
+<option value="400x400">Kecil 400×400</option>
+<option value="800x600" selected>Sedang 800×600</option>
+<option value="1200x800">Besar 1200×800</option>
+<option value="600x900">Potret 600×900</option>
+</select>
+<select id="dur"><option value="0">Duo: waktu manual</option><option value="5">Duo: 5 menit</option><option value="10" selected>Duo: 10 menit</option><option value="15">Duo: 15 menit</option><option value="30">Duo: 30 menit</option><option value="60">Duo: 60 menit</option></select>
+<button class="btn pri" id="solo">Solo</button>
+<button class="btn" id="host">Duo - Buat Room</button>
+<button class="btn" id="join">Duo - Gabung Room</button>
+<p>Mode duo: buat room, temanmu cukup memasukkan kode 5 huruf. Masing-masing menggambar sendiri, hasilnya dibuka bersama saat waktu habis. Waktu diatur pembuat room.</p>
+</div>
+</div>
+
+<div id="pair" class="scr hide">
+<div class="card">
+<h2 id="pt"></h2>
+<p id="p1"></p>
+<div id="code"></div>
+<input id="jin" maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KODE">
+<button class="btn pri" id="go">Gabung</button>
+<p id="ps" style="text-align:center"></p>
+<button class="btn" id="back">Kembali</button>
+</div>
+</div>
+
+<div id="studio" class="scr hide">
+<div id="top">
+<button class="ib" id="undo" data-i="undo" title="Sebelumnya" aria-label="Sebelumnya"></button>
+<button class="ib" id="redo" data-i="redo" title="Sesudahnya" aria-label="Sesudahnya"></button>
+<button class="ib" id="clr" data-i="trash" title="Hapus semua" aria-label="Hapus semua"></button>
+<button class="ib" id="dl" data-i="download" title="Unduh PNG" aria-label="Unduh PNG"></button>
+<button class="ib" id="lb" data-i="layers" title="Layer" aria-label="Layer"></button>
+<button class="ib" id="rb" data-i="image" title="Referensi" aria-label="Referensi"></button>
+<button class="ib" id="zr" title="Reset zoom" aria-label="Reset zoom">100%</button>
+<span class="sp"></span>
+<span class="av hide" id="oa" style="width:26px;height:26px;font-size:12px;border-width:1px"></span><span id="tm" class="hide"></span><button class="hide" id="fn">Selesai</button><span id="st"></span>
+<button class="ib" id="chb" data-i="chat" title="Chat" aria-label="Chat"></button>
+<button class="ib" id="exit" data-i="x" title="Keluar" aria-label="Keluar"></button>
+</div>
+<div id="cols">
+<button id="cbtn" aria-label="Warna"></button>
+<input type="range" id="sz" min="1" max="60" value="6" aria-label="Ukuran kuas">
+<span id="szv" style="width:22px;font-size:12px">6</span>
+<button class="ib" id="sbtn" data-i="sliders" aria-label="Pengaturan kuas" title="Pengaturan kuas"></button>
+</div>
+<div id="mid">
+<div id="cw"><div id="lys"></div><canvas id="ov"></canvas><canvas id="ov2"></canvas><canvas id="sl"></canvas><canvas id="cv"></canvas></div>
+<div id="selbar" class="hide"><button data-a="fill">Isi</button><button data-a="del">Hapus</button><button data-a="inv">Balik</button><button data-a="off">Lepas</button></div>
+<div id="toast" class="hide"></div>
+<div id="chat" class="hide">
+<div id="msgs"></div>
+<form id="cf"><input id="ci" maxlength="200" placeholder="Tulis pesan..." autocomplete="off"><button class="ib" data-i="send" aria-label="Kirim" style="background:#4f46e5;color:#fff"></button></form>
+</div>
+</div>
+<div id="tools"></div>
+</div>
+<div id="cpd" class="hide">
+<div class="pn">
+<div class="ph"><h2>Warna</h2><span id="pv"><i id="pvo"></i><i id="pvn"></i></span><button class="ib" id="cx" data-i="x" aria-label="Tutup"></button></div>
+<div id="wb"><canvas id="wh" width="300" height="300"></canvas></div>
+<div id="hx"></div>
+<div id="ct"></div>
+<div id="cr"></div>
+</div>
+</div>
+<div id="spd" class="hide">
+<div class="pn">
+<div class="ph"><h2>Pengaturan Kuas</h2><button class="ib" id="sx" data-i="x" aria-label="Tutup"></button></div>
+<div id="sr"></div>
+<p>Awal dan Akhir mengatur panjang ujung runcing pada pulpen, pensil, kuas lembut, dan penghapus. Toleransi dipakai oleh tongkat sihir.</p>
+</div>
+</div>
+<div id="lpd" class="hide"><div class="pn"><div class="ph"><h2>Layer</h2><button class="ib" id="lx" data-i="x" aria-label="Tutup"></button></div><div id="lr"></div><div class="row" style="justify-content:space-between"><button class="btn" id="la">+ Tambah</button><button class="btn" id="ld">Hapus</button><button class="ib" id="lu" data-i="up" aria-label="Naik"></button><button class="ib" id="lw" data-i="down" aria-label="Turun"></button></div></div></div>
+<div id="rw" class="hide"><div id="rh"><span>Referensi</span><button class="ib" id="rl" data-i="image" aria-label="Muat gambar"></button><button class="ib" id="rc" data-i="x" aria-label="Tutup"></button></div><canvas id="rf"></canvas><div id="rg"></div><input type="file" id="rfi" accept="image/*" class="hide"></div>
+<div id="rv" class="hide"><div class="pn" style="max-width:480px"><div class="ph"><h2>Hasil Gambar</h2></div><div id="rvc"></div><div class="row"><button class="btn pri" id="rx">Keluar</button></div></div></div>
+<div id="bd" class="hide"></div>
+
+<script>
+const $=s=>document.querySelector(s)
+const hexRgb=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255]}
+
+class Stroker{
+constructor(ctx,w,h,bg,ovc){this.main=ctx;this.c=ctx;this.w=w;this.h=h;this.bg=bg;this.ovc=ovc;this.ovx=ovc.getContext('2d');this.mask=null;this.p={tool:'pen',color:'#000',size:4,ti:0,to:0};this.a=null;this.m=null;this.rem=0;this.sp=null;this.sk='';this.tmp=null;this.tc=null;this.pts=[];this.d=0;this.total=null;this.rp=false;this.useOv=false}
+get active(){return this.a!==null}
+setLayer(y){this.main=this.c=y.ctx;this.bg=y.bg?"#ffffff":null}
+ek(){return this.bg||"#ffffff"}
+tf(){
+const p=this.p
+if(!(p.ti>0||p.to>0)||this.total===0)return 1
+let k=1
+if(p.ti>0)k=Math.min(k,this.d/p.ti)
+if(p.to>0&&this.total!==null)k=Math.min(k,(this.total-this.d)/p.to)
+return .06+.94*Math.sin(Math.max(0,Math.min(1,k))*1.5708)
+}
+begin(p,x,y){
+this.p=p;this.a={x,y};this.m={x,y};this.rem=0;this.d=0
+if(!this.rp){this.pts=[x,y];this.total=null}
+const t=p.tool
+this.useOv=t!=='blur'&&(p.ti>0||p.to>0||!!p.sel)
+this.c=this.useOv?this.ovx:this.main
+this.er=t==='eraser'&&!this.bg
+const c=this.c,q=this.tf()
+c.globalAlpha=1;c.globalCompositeOperation=this.er&&!this.useOv?'destination-out':'source-over'
+if(t==='pen'||t==='eraser'){c.fillStyle=t==='eraser'?this.ek():p.color;c.beginPath();c.arc(x,y,(t==='eraser'?p.size*1.5:p.size)*q/2,0,7);c.fill()}
+else if(t==='pencil'){c.fillStyle=p.color;c.globalAlpha=.75;c.beginPath();c.arc(x,y,Math.max(.6,p.size*.25)*q,0,7);c.fill();c.globalAlpha=1}
+else if(t==='chisel')this.chisel(x,y,x,y)
+else if(t==='brush')this.stampLine({x,y},{x,y},this.spacing())
+else if(t==='spray')this.spray(x,y)
+else if(t==='blur')this.blurAt(x,y)
+}
+move(x,y){
+if(!this.a)return
+const a=this.a,b={x,y},t=this.p.tool
+if(!this.rp)this.pts.push(x,y)
+this.d+=Math.hypot(x-a.x,y-a.y)
+if(t==='pen'||t==='eraser'||t==='pencil'){const mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2};this.curve(this.m,a,mid);this.m=mid}
+else if(t==='chisel')this.chisel(a.x,a.y,b.x,b.y)
+else this.stampLine(a,b,this.spacing())
+this.a=b
+}
+end(){
+if(!this.a)return
+const t=this.p.tool
+if(t==='pen'||t==='eraser'||t==='pencil')this.curve(this.m,this.a,this.a)
+this.c.globalAlpha=1;this.c.globalCompositeOperation='source-over';this.a=null;this.m=null
+if(!this.rp)this.fin()
+}
+replay(){
+const pts=this.pts,p=this.p
+let t=0
+for(let i=2;i<pts.length;i+=2)t+=Math.hypot(pts[i]-pts[i-2],pts[i+1]-pts[i-1])
+this.ovx.clearRect(0,0,this.w,this.h)
+this.rp=true;this.total=t
+this.begin(p,pts[0],pts[1])
+for(let i=2;i<pts.length;i+=2)this.move(pts[i],pts[i+1])
+this.end()
+this.rp=false
+}
+fin(){
+if(!this.useOv)return
+const p=this.p
+if(p.to>0||(p.ti>0&&this.pts.length<=2))this.replay()
+let src=this.ovc
+if(this.mask){
+const t=this.tc||(this.tc=document.createElement('canvas'))
+t.width=this.w;t.height=this.h
+const g=t.getContext('2d')
+g.drawImage(this.ovc,0,0);g.globalCompositeOperation='destination-in';g.drawImage(this.mask,0,0)
+src=t
+}
+this.main.globalAlpha=1;this.main.globalCompositeOperation=this.er?'destination-out':'source-over';this.main.drawImage(src,0,0);this.main.globalCompositeOperation='source-over'
+this.ovx.clearRect(0,0,this.w,this.h)
+this.useOv=false;this.c=this.main
+}
+spacing(){const s=this.p.size,t=this.p.tool;return t==='brush'?Math.max(1,s*.14):t==='spray'?Math.max(2,s*.35):Math.max(2,s*.3)}
+curve(f,k,to){
+const c=this.c,p=this.p,q=this.tf()
+c.lineJoin='round'
+if(p.tool==='pen'||p.tool==='eraser'){
+c.strokeStyle=p.tool==='eraser'?this.ek():p.color;c.lineWidth=(p.tool==='eraser'?p.size*1.5:p.size)*q;c.lineCap='round';c.globalAlpha=1
+c.beginPath();c.moveTo(f.x,f.y);c.quadraticCurveTo(k.x,k.y,to.x,to.y);c.stroke();return
+}
+c.strokeStyle=p.color;c.lineCap='butt';c.lineWidth=Math.max(.5,p.size*.5*q);c.globalAlpha=.7
+c.beginPath();c.moveTo(f.x,f.y);c.quadraticCurveTo(k.x,k.y,to.x,to.y);c.stroke()
+const j=Math.max(.4,p.size*.22)*q,r=()=>(Math.random()-.5)*j
+c.globalAlpha=.3;c.lineWidth=Math.max(.4,p.size*.35*q)
+c.beginPath();c.moveTo(f.x+r(),f.y+r());c.quadraticCurveTo(k.x+r(),k.y+r(),to.x+r(),to.y+r());c.stroke()
+c.globalAlpha=1
+}
+chisel(x0,y0,x1,y1){
+const c=this.c,s=Math.max(2,this.p.size*1.4),ox=Math.SQRT1_2*s/2,oy=-ox
+c.globalAlpha=1;c.fillStyle=c.strokeStyle=this.p.color;c.lineWidth=1;c.lineJoin='round'
+c.beginPath();c.moveTo(x0+ox,y0+oy);c.lineTo(x1+ox,y1+oy);c.lineTo(x1-ox,y1-oy);c.lineTo(x0-ox,y0-oy);c.closePath();c.fill();c.stroke()
+}
+stampLine(a,b,sp){
+const dx=b.x-a.x,dy=b.y-a.y,dist=Math.hypot(dx,dy)
+if(dist===0&&this.rem===0){this.stamp(a.x,a.y);this.rem=sp;return}
+let d=this.rem
+while(d<=dist){const k=dist===0?0:d/dist;this.stamp(a.x+dx*k,a.y+dy*k);d+=sp}
+this.rem=d-dist
+}
+stamp(x,y){const t=this.p.tool;if(t==='brush')this.brushStamp(x,y);else if(t==='spray')this.spray(x,y);else if(t==='blur')this.blurAt(x,y)}
+sprite(){
+const r=Math.max(1,Math.round(this.p.size*1.2)),key=this.p.color+'|'+r
+if(this.sp&&this.sk===key)return this.sp
+const cv=this.sp||document.createElement('canvas')
+cv.width=cv.height=r*2
+const g=cv.getContext('2d'),[R,G,B]=hexRgb(this.p.color),gr=g.createRadialGradient(r,r,0,r,r,r)
+gr.addColorStop(0,`rgba(${R},${G},${B},1)`);gr.addColorStop(.35,`rgba(${R},${G},${B},.7)`);gr.addColorStop(1,`rgba(${R},${G},${B},0)`)
+g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height)
+this.sp=cv;this.sk=key
+return cv
+}
+brushStamp(x,y){const s=this.sprite(),c=this.c,q=this.tf(),w=s.width*q,h=s.height*q;c.globalAlpha=.22;c.drawImage(s,x-w/2,y-h/2,w,h);c.globalAlpha=1}
+spray(x,y){
+const c=this.c,s=this.p.size,R=s*1.4,n=Math.max(8,Math.round(s*.9)),dot=Math.max(1,s/14)
+c.fillStyle=this.p.color;c.globalAlpha=.85
+for(let i=0;i<n;i++){const an=Math.random()*6.2832,rd=R*Math.sqrt(Math.random());c.fillRect(x+Math.cos(an)*rd,y+Math.sin(an)*rd,dot,dot)}
+c.globalAlpha=1
+}
+blurAt(x,y){
+const r=Math.max(4,Math.round(this.p.size*1.2)),x0=Math.max(0,Math.floor(x-r)),y0=Math.max(0,Math.floor(y-r)),x1=Math.min(this.w,Math.ceil(x+r)),y1=Math.min(this.h,Math.ceil(y+r)),rw=x1-x0,rh=y1-y0
+if(rw<2||rh<2)return
+const sw=Math.max(1,Math.round(rw/3)),sh=Math.max(1,Math.round(rh/3)),tmp=this.tmp||(this.tmp=document.createElement('canvas'))
+if(tmp.width!==sw)tmp.width=sw
+if(tmp.height!==sh)tmp.height=sh
+const tc=tmp.getContext('2d');tc.imageSmoothingEnabled=true
+tc.drawImage(this.c.canvas,x0,y0,rw,rh,0,0,sw,sh)
+const c=this.c
+c.save();c.beginPath();c.arc(x,y,r,0,7);c.clip();c.globalAlpha=.85;c.imageSmoothingEnabled=true;c.drawImage(tmp,0,0,sw,sh,x0,y0,rw,rh);c.restore()
+}
+}
+
+const wandMask=(ctx,w,h,sx,sy,tol)=>{
+const x0=Math.floor(sx),y0=Math.floor(sy)
+if(x0<0||y0<0||x0>=w||y0>=h)return null
+const d=ctx.getImageData(0,0,w,h).data,si=(y0*w+x0)*4,tr=d[si],tg=d[si+1],tb=d[si+2],vis=new Uint8Array(w*h)
+const match=p=>{const i=p*4;return Math.abs(d[i]-tr)+Math.abs(d[i+1]-tg)+Math.abs(d[i+2]-tb)<=tol}
+const st=[x0,y0]
+while(st.length){
+const y=st.pop();let x=st.pop()
+while(x>=0&&!vis[y*w+x]&&match(y*w+x))x--
+x++
+let up=false,dn=false
+while(x<w&&!vis[y*w+x]&&match(y*w+x)){
+const p=y*w+x
+vis[p]=1
+if(y>0){const q=p-w,ok=!vis[q]&&match(q);if(ok&&!up){st.push(x,y-1);up=true}else if(!ok)up=false}
+if(y<h-1){const q=p+w,ok=!vis[q]&&match(q);if(ok&&!dn){st.push(x,y+1);dn=true}else if(!ok)dn=false}
+x++
+}
+}
+return vis
+}
+const floodFill=(ctx,w,h,sx,sy,color)=>{
+const m=wandMask(ctx,w,h,sx,sy,48)
+if(!m)return
+const img=ctx.getImageData(0,0,w,h),d=img.data,[r,g,b]=hexRgb(color)
+for(let p=0;p<m.length;p++)if(m[p]){const i=p*4;d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}
+ctx.putImageData(img,0,0)
+}
+
+class History{
+constructor(w,h){this.w=w;this.h=h;this.past=[];this.fut=[];this.max=Math.max(5,Math.min(20,Math.floor(3e7/(w*h*4))))}
+st(id){
+const pv=this.past[this.past.length-1]
+return{a:S.cur.id,l:S.lay.map(y=>{const o=pv&&pv.l.find(z=>z.id===y.id);return{id:y.id,n:y.n,v:y.v,bg:y.bg,img:o&&id!=='*'&&y.id!==id?o.img:y.ctx.getImageData(0,0,this.w,this.h)}})}
+}
+snap(id){this.fut=[];this.past.push(this.st(id));if(this.past.length>this.max)this.past.shift()}
+img(id){const s=this.past[this.past.length-1],e=s&&s.l.find(z=>z.id===id);return e&&e.img}
+go(s){
+const old=new Map(S.lay.map(y=>[y.id,y]))
+S.lay=s.l.map(e=>{const y=old.get(e.id)||mkLayer(e.id,e.n,e.bg);y.n=e.n;y.v=e.v;y.ctx.putImageData(e.img,0,0);return y})
+if(!S.lay.includes(S.cur))S.cur=S.lay.find(y=>y.id===s.a)||S.lay[S.lay.length-1]
+relayer()
+}
+undo(){if(this.past.length<2)return false;this.fut.push(this.past.pop());this.go(this.past[this.past.length-1]);return true}
+redo(){const s=this.fut.pop();if(!s)return false;this.past.push(s);this.go(s);return true}
+get canUndo(){return this.past.length>1}
+get canRedo(){return this.fut.length>0}
+}
+
+const b64=u=>{let s='';u.forEach(b=>s+=String.fromCharCode(b));return btoa(s)}
+const pipe=async(kind,bytes)=>{const s=new kind('deflate'),w=s.writable.getWriter();w.write(bytes);w.close();return new Uint8Array(await new Response(s.readable).arrayBuffer())}
+const pack=async o=>{const raw=new TextEncoder().encode(JSON.stringify(o));return window.CompressionStream?'Z'+b64(await pipe(CompressionStream,raw)):'R'+b64(raw)}
+const unpack=async s=>{
+s=s.replace(/\s+/g,'')
+let u=Uint8Array.from(atob(s.slice(1)),c=>c.charCodeAt(0))
+if(s[0]==='Z')u=await pipe(DecompressionStream,u)
+return JSON.parse(new TextDecoder().decode(u))
+}
+
+class Link{
+constructor(){this.pc=null;this.dc=null;this.on={}}
+peer(){
+const pc=this.pc=new RTCPeerConnection({iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:['turn:openrelay.metered.ca:80','turn:openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}]})
+pc.onconnectionstatechange=()=>{if(pc.connectionState==='failed'||pc.connectionState==='closed')this.on.close&&this.on.close()}
+return pc
+}
+chan(dc){
+this.dc=dc
+dc.onopen=()=>this.on.open&&this.on.open()
+dc.onclose=()=>this.on.close&&this.on.close()
+dc.onmessage=e=>{try{this.on.data&&this.on.data(JSON.parse(e.data))}catch(x){}}
+}
+async ice(){
+const pc=this.pc
+if(pc.iceGatheringState!=='complete')await new Promise(res=>{const t=setTimeout(res,5000);pc.onicegatheringstatechange=()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);res()}}})
+return pack(pc.localDescription.toJSON())
+}
+async offer(){const pc=this.peer();this.chan(pc.createDataChannel('d'));await pc.setLocalDescription(await pc.createOffer());return this.ice()}
+async answerTo(code){const pc=this.peer();pc.ondatachannel=e=>this.chan(e.channel);await pc.setRemoteDescription(await unpack(code));await pc.setLocalDescription(await pc.createAnswer());return this.ice()}
+async accept(code){await this.pc.setRemoteDescription(await unpack(code))}
+send(o){if(this.dc&&this.dc.readyState==='open')try{this.dc.send(JSON.stringify(o))}catch(x){}}
+get open(){return !!this.dc&&this.dc.readyState==='open'}
+close(){this.on={};try{this.dc&&this.dc.close()}catch(x){}try{this.pc&&this.pc.close()}catch(x){}this.dc=this.pc=null}
+}
+
+const P={
+pen:'<path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 0 1 3 3L7.4 18.6l-4.4 1.2 1.2-4.4z"/>',
+pencil:'<path d="M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5z"/><path d="m15 5 4 4"/>',
+brush:'<path d="m9.1 11.9 3 3"/><path d="M20.4 3.6a2 2 0 0 0-2.8 0L10 11.2l2.8 2.8 7.6-7.6a2 2 0 0 0 0-2.8z"/><path d="M9 14.5c-2.4 0-4 1.6-4 3.5 0 1.3-.9 2.2-2.5 2.6C4 21.6 6 22 8 22c3 0 5-2 5-4.5"/>',
+chisel:'<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>',
+spray:'<path d="M3 3h.01M7 5h.01M11 7h.01M3 7h.01M7 9h.01M3 11h.01"/><rect width="4" height="4" x="15" y="5"/><path d="m19 9 2 2v10c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1V11l2-2"/><path d="m13 14 8-2M13 19l8-2"/>',
+eraser:'<path d="m7 21-4.3-4.3a2.4 2.4 0 0 1 0-3.4l9.6-9.6a2.4 2.4 0 0 1 3.4 0l5.6 5.6a2.4 2.4 0 0 1 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/>',
+fill:'<path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2.8 0z"/><path d="m5 2 5 5"/><path d="M2 13h15"/><path d="M22 20a2 2 0 1 1-4 0c0-1.6 1.7-2.4 2-4 .3 1.6 2 2.4 2 4z"/>',
+blur:'<path d="M12 2.7c3.6 4 6 7 6 10.3a6 6 0 0 1-12 0c0-3.3 2.4-6.300 6-10.300z"/>',
+undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.500 5.500 0 0 1 0 11H11"/>',
+redo:'<path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.500 5.500 0 0 0 0 11H13"/>',
+trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6M14 11v6"/>',
+download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+chat:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/>',
+minus:'<path d="M5 12h14"/>',
+plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',
+wand:'<path d="m21.640 3.640-1.280-1.280a1.200 1.200 0 0 0-1.720 0L2.360 18.640a1.200 1.200 0 0 0 0 1.720l1.280 1.280a1.200 1.200 0 0 0 1.720 0L21.640 5.360a1.200 1.200 0 0 0 0-1.720"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/>',
+sliders:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/>',
+x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
+logo:'<path d="m14.600 17.900-10.700-2.900"/><path d="M18.400 2.600a2 2 0 0 1 3 3L17.400 9.600a.5.5 0 0 0 0 .7l.9.9a2.400 2.400 0 0 1 0 3.400l-.9.9a.5.5 0 0 1-.7 0L8.400 7.300a.5.5 0 0 1 0-.7l.9-.9a2.400 2.400 0 0 1 3.400 0l.9.9a.5.5 0 0 0 .7 0z"/><path d="M9 8c-1.800 2.700-4 3.500-6.600 3.900a.5.5 0 0 0-.3.8l7.300 8.900a1 1 0 0 0 1.200.2C12.700 20.400 16 16.800 16 15"/>'
+}
+Object.assign(P,{
+layers:'<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 12 10 5 10-5"/><path d="m2 17 10 5 10-5"/>',
+image:'<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+eyeoff:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><path d="m3 3 18 18"/>',
+up:'<path d="m18 15-6-6-6 6"/>',
+down:'<path d="m6 9 6 6 6-6"/>'
+})
+const ic=n=>'<svg viewBox="0 0 24 24">'+P[n]+'</svg>'
+document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=ic(e.dataset.i)})
+const TOOLS=[['pen','Pulpen'],['pencil','Pensil'],['brush','Kuas Lembut'],['chisel','Kaligrafi'],['spray','Semprot'],['eraser','Penghapus'],['fill','Ember Cat'],['blur','Blur'],['wand','Tongkat Sihir']]
+const CHUNK=12000
+const r1=n=>Math.round(n*10)/10
+const cv=$('#cv')
+const S={tool:'pen',color:'#111827',size:6,w:800,h:600,link:null,ctx:null,loc:null,stab:0,ti:0,to:0,tol:16,sel:null,sp:{x:0,y:0},raw:{x:0,y:0},rem:null,hist:null,aid:null,buf:[],nt:null,st:null,rx:null,unread:0,duo:false,msgs:0,cfg:null,lay:[],cur:null,nid:1,sz:'800x600'}
+const CK='kanvas-cfg',KEYS=['stab','ti','to','tol','size','color','tool','sz']
+try{const o=JSON.parse(localStorage.getItem(CK)||'{}');KEYS.forEach(k=>{if(k in o&&typeof o[k]===typeof S[k])S[k]=o[k]})}catch(x){}
+if(!/^#[0-9a-f]{6}$/i.test(S.color))S.color='#111827'
+if(!['pen','pencil','brush','chisel','spray','eraser','fill','blur','wand'].includes(S.tool))S.tool='pen'
+const saveCfg=()=>{try{localStorage.setItem(CK,JSON.stringify(Object.fromEntries(KEYS.map(k=>[k,S[k]]))))}catch(x){}}
+const show=id=>{['menu','pair','studio'].forEach(s=>$('#'+s).classList.toggle('hide',s!==id))}
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hide'),2000)}
+const net=o=>S.link&&S.link.send(o)
+
+const dialog=(title,text,btns)=>{
+const bd=$('#bd'),card=document.createElement('div')
+card.className='card'
+card.innerHTML='<h2></h2><p></p><div class="row"></div>'
+card.firstChild.textContent=title
+card.children[1].textContent=text
+btns.forEach(([l,f,pri])=>{const b=document.createElement('button');b.className='btn'+(pri?' pri':'');b.textContent=l;b.onclick=()=>{bd.classList.add('hide');f&&f()};card.lastChild.appendChild(b)})
+bd.innerHTML='';bd.appendChild(card);bd.classList.remove('hide')
+}
+
+const V={z:1,x:0,y:0,k:1}
+const applyV=()=>{
+const m=$('#mid'),W=S.w*V.k*V.z,H=S.h*V.k*V.z
+V.x=Math.min(m.clientWidth-40,Math.max(40-W,V.x));V.y=Math.min(m.clientHeight-40,Math.max(40-H,V.y))
+$('#cw').style.transform='translate('+V.x+'px,'+V.y+'px) scale('+V.z+')'
+$('#lys').style.imageRendering=V.z*V.k>2?'pixelated':'auto'
+$('#zr').textContent=Math.round(V.z*V.k*100)+'%'
+}
+const fit=()=>{
+const m=$('#mid'),k=Math.max(.05,Math.min((m.clientWidth-24)/S.w,(m.clientHeight-24)/S.h,2)),w=$('#cw')
+V.k=k;V.z=1;V.x=(m.clientWidth-S.w*k)/2;V.y=(m.clientHeight-S.h*k)/2
+w.style.width=S.w*k+'px';w.style.height=S.h*k+'px'
+applyV()
+}
+const refresh=()=>{$('#undo').disabled=!S.hist.canUndo;$('#redo').disabled=!S.hist.canRedo}
+const tmps=[]
+const tmp=i=>{const c=tmps[i]||(tmps[i]=document.createElement('canvas'));c.width=S.w;c.height=S.h;return c}
+const hs=id=>{S.hist.snap(id);refresh()}
+const hd=()=>hs(S.cur.id)
+const mkLayer=(id,n,bg)=>{
+const c=document.createElement('canvas')
+c.width=S.w;c.height=S.h
+const x=c.getContext('2d')
+if(bg){x.fillStyle='#fff';x.fillRect(0,0,S.w,S.h)}
+return{id,n,v:true,bg,cv:c,ctx:x}
+}
+const relayer=()=>{
+$('#lys').replaceChildren(...S.lay.map(y=>y.cv))
+S.lay.forEach(y=>{y.cv.style.display=y.v?'':'none'})
+S.ctx=S.cur.ctx;S.loc.setLayer(S.cur);S.rem.setLayer(S.cur)
+}
+const flat=n=>{
+const t=n?document.createElement('canvas'):tmp(2)
+t.width=S.w;t.height=S.h
+const g=t.getContext('2d')
+g.fillStyle='#fff';g.fillRect(0,0,S.w,S.h)
+S.lay.forEach(y=>{if(y.v)g.drawImage(y.cv,0,0)})
+return t
+}
+const setSel=m=>{
+const w=S.w,h=S.h,sx=$('#sl').getContext('2d'),ov=$('#ov')
+sx.clearRect(0,0,w,h)
+if(!m||m.indexOf(1)<0){
+S.sel=null;S.loc.mask=null
+ov.style.maskImage=ov.style.webkitMaskImage=''
+$('#selbar').classList.add('hide')
+return
+}
+const mc=document.createElement('canvas')
+mc.width=w;mc.height=h
+const mg=mc.getContext('2d'),a=mg.createImageData(w,h),b=sx.createImageData(w,h)
+for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+const p=y*w+x,i=p*4
+if(!m[p])continue
+a.data[i+3]=255
+const edge=x===0||y===0||x===w-1||y===h-1||!m[p-1]||!m[p+1]||!m[p-w]||!m[p+w]
+b.data[i]=79;b.data[i+1]=70;b.data[i+2]=229;b.data[i+3]=edge?255:60
+}
+mg.putImageData(a,0,0);sx.putImageData(b,0,0)
+S.sel={d:m,cv:mc};S.loc.mask=mc
+ov.style.maskImage=ov.style.webkitMaskImage='url('+mc.toDataURL()+')'
+ov.style.maskSize=ov.style.webkitMaskSize='100% 100%'
+$('#selbar').classList.remove('hide')
+}
+const maskFill=color=>{
+const t=tmp(0),g=t.getContext('2d')
+g.fillStyle=color||'#fff';g.fillRect(0,0,S.w,S.h)
+g.globalCompositeOperation='destination-in';g.drawImage(S.sel.cv,0,0)
+S.ctx.globalAlpha=1;S.ctx.globalCompositeOperation=!color&&!S.cur.bg?'destination-out':'source-over';S.ctx.drawImage(t,0,0);S.ctx.globalCompositeOperation='source-over'
+hd();queueSync()
+}
+document.querySelectorAll('#selbar button').forEach(b=>{b.onclick=()=>{
+const a=b.dataset.a
+if(!S.sel)return
+if(a==='fill')maskFill(S.color)
+else if(a==='del')maskFill(null)
+else if(a==='inv')setSel(S.sel.d.map(v=>v?0:1))
+else setSel(null)
+}})
+
+const initCanvas=(w,h)=>{
+S.w=w;S.h=h
+for(const id of ['cv','ov','ov2','sl']){const e=$('#'+id);e.width=w;e.height=h}
+S.nid=1;S.cur=mkLayer(1,'Latar',true);S.lay=[S.cur];S.ctx=S.cur.ctx
+S.loc=new Stroker(S.ctx,w,h,'#ffffff',$('#ov'));S.rem=new Stroker(S.ctx,w,h,'#ffffff',$('#ov2'))
+$('#lys').replaceChildren(S.cur.cv)
+S.hist=new History(w,h);S.hist.snap()
+S.aid=null;setSel(null);refresh();fit()
+}
+
+const queueSync=()=>{}
+const addPt=(x,y)=>S.loc.move(x,y)
+const kStab=()=>1/(1+S.stab*.12)
+const finish=()=>{
+if(S.loc.active){
+const k=Math.max(kStab(),.2)
+for(let i=0;i<80&&Math.hypot(S.raw.x-S.sp.x,S.raw.y-S.sp.y)>.6;i++){
+S.sp.x+=(S.raw.x-S.sp.x)*k;S.sp.y+=(S.raw.y-S.sp.y)*k
+addPt(S.sp.x,S.sp.y)
+}
+const live=!S.loc.p.sel
+S.loc.end()
+if(S.sel&&S.loc.p.tool==='blur'){
+const a=tmp(0),ag=a.getContext('2d'),b=tmp(1),bg=b.getContext('2d')
+ag.putImageData(S.hist.img(S.cur.id),0,0)
+bg.drawImage(S.cur.cv,0,0);bg.globalCompositeOperation='destination-in';bg.drawImage(S.sel.cv,0,0)
+ag.drawImage(b,0,0);S.ctx.globalCompositeOperation='copy';S.ctx.drawImage(a,0,0);S.ctx.globalCompositeOperation='source-over'
+}
+hd()
+if(!live)queueSync()
+}
+S.aid=null
+}
+const setSt=(t,ok)=>{const e=$('#st');e.textContent=t;e.className=ok?'ok':''}
+
+const onData=d=>{
+const t=d.t
+if(t==='chat')addMsg(false,String(d.m||'').slice(0,200))
+else if(t==='hello'){S.opp=sanP(d.p);updOpp()}
+else if(t==='end')endRound()
+else if(t==='fin'){
+if(!(d.n>0&&d.n<300))return
+let x=S.rx
+if(!x||x.id!==d.id)x=S.rx={id:d.id,n:d.n,p:[],k:0}
+x.p[d.i]=String(d.d);x.k++
+if(x.k===x.n){
+const u=x.p.join('');S.rx=null
+if(/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(u)){S.oppUrl=u;if(S.over)renderRv()}
+}
+}
+}
+
+const addMsg=(me,text)=>{
+const e=document.createElement('div');e.className='m'+(me?' me':'');e.textContent=text
+const box=$('#msgs');box.appendChild(e);box.scrollTop=box.scrollHeight
+if(!me&&$('#chat').classList.contains('hide')){S.unread++;badge()}
+}
+const badge=()=>{
+const b=$('#chb');let e=b.querySelector('.badge')
+if(S.unread&&!e){e=document.createElement('span');e.className='badge';b.appendChild(e)}
+if(e){if(S.unread)e.textContent=S.unread;else e.remove()}
+}
+
+const startStudio=(cfg,link)=>{
+S.duo=cfg.mode==='duo';S.link=link;S.cfg=cfg
+initCanvas(cfg.w,cfg.h)
+$('#msgs').innerHTML='';S.unread=0;badge()
+$('#chat').classList.add('hide')
+$('#chb').classList.toggle('hide',!S.duo);$('#lpd').classList.add('hide')
+$('#tm').classList.toggle('hide',!S.duo);$('#tm').style.color='';$('#fn').classList.toggle('hide',!(S.duo&&cfg.role==='host'));$('#rv').classList.add('hide');$('#oa').classList.add('hide')
+S.over=false;S.mineUrl=S.oppUrl=S.rx=null;S.end=cfg.dur>0?Date.now()+cfg.dur*1000:0
+clearInterval(S.tmr)
+if(S.duo){S.tmr=setInterval(tick,500);tick()}
+setSt(S.duo?'Terhubung':'',true)
+if(link){
+link.on={data:onData,close:()=>{setSt('Koneksi terputus',false);S.rem.end()}}
+}
+show('studio');fit()
+}
+
+const exitStudio=()=>{
+if(S.link){S.link.close();S.link=null}
+$('#rw').classList.add('hide');$('#lpd').classList.add('hide');$('#rv').classList.add('hide');clearInterval(S.tmr);S.over=false;S.mineUrl&&URL.revokeObjectURL(S.mineUrl);S.mineUrl=S.oppUrl=S.mine=null
+show('menu')
+}
+
+const point=(e,r)=>({x:(e.clientX-r.left)*S.w/r.width,y:(e.clientY-r.top)*S.h/r.height})
+let rect=null,tap=null,gs=null
+const ptr=new Map()
+const tapAct=(x,y)=>{
+const src=flat().getContext('2d')
+if(S.tool==='wand'){setSel(wandMask(src,S.w,S.h,x,y,S.tol*3));return}
+const m=wandMask(src,S.w,S.h,x,y,48)
+if(!m)return
+const t=tmp(0),g=t.getContext('2d'),img=g.createImageData(S.w,S.h),d=img.data,[r,gr,b]=hexRgb(S.color)
+for(let p=0;p<m.length;p++)if(m[p]){const i=p*4;d[i]=r;d[i+1]=gr;d[i+2]=b;d[i+3]=255}
+g.putImageData(img,0,0)
+if(S.sel){g.globalCompositeOperation='destination-in';g.drawImage(S.sel.cv,0,0)}
+S.ctx.globalAlpha=1;S.ctx.drawImage(t,0,0)
+hd()
+
+}
+const abort=()=>{finish();doUndo();S.hist.fut=[]}
+cv.addEventListener('pointerdown',e=>{
+if(S.over||S.aid!==null||tap||(e.pointerType==='touch'&&!e.isPrimary)||(e.pointerType==='mouse'&&e.button!==0))return
+rect=cv.getBoundingClientRect()
+const{x,y}=point(e,rect)
+if(S.tool==='wand'||S.tool==='fill'){
+if(S.tool==='fill'&&!S.cur.v)return toast('Layer tersembunyi')
+tap={id:e.pointerId,x:e.clientX,y:e.clientY,px:x,py:y};cv.setPointerCapture(e.pointerId);return
+}
+if(!S.cur.v)return toast('Layer tersembunyi')
+cv.setPointerCapture(e.pointerId);S.aid=e.pointerId
+S.sp={x,y};S.raw={x,y}
+S.loc.mask=S.sel?S.sel.cv:null
+const p={tool:S.tool,color:S.color,size:S.size,ti:S.ti*3,to:S.to*3,sel:!!S.sel}
+S.loc.begin(p,x,y)
+})
+cv.addEventListener('pointermove',e=>{
+if(S.aid!==e.pointerId)return
+const r=point(e,rect),k=kStab()
+S.raw=r
+S.sp.x+=(r.x-S.sp.x)*k;S.sp.y+=(r.y-S.sp.y)*k
+addPt(S.sp.x,S.sp.y)
+})
+const up=e=>{
+if(S.aid===e.pointerId)finish()
+else if(tap&&tap.id===e.pointerId){const t=tap;tap=null;if(e.type==='pointerup'&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<12)tapAct(t.px,t.py)}
+}
+cv.addEventListener('pointerup',up)
+cv.addEventListener('pointercancel',up)
+
+const mid=$('#mid')
+const gc=()=>{const a=[...ptr.values()];return{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2,d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1}}
+const zoomAt=(cx,cy,nz)=>{
+const r=mid.getBoundingClientRect(),px=cx-r.left,py=cy-r.top
+nz=Math.min(24,Math.max(.3,nz))
+const f=nz/V.z
+V.x=px-(px-V.x)*f;V.y=py-(py-V.y)*f;V.z=nz;applyV()
+}
+mid.addEventListener('pointerdown',e=>{
+if(e.target.closest('#selbar,#chat'))return
+if(e.pointerType==='touch'){
+if(e.isPrimary){ptr.clear();gs=null}
+ptr.set(e.pointerId,{x:e.clientX,y:e.clientY})
+if(ptr.size===2){tap=null;if(S.aid!==null)abort();const g=gc();gs={x:g.x,y:g.y,d:g.d,z:V.z,vx:V.x,vy:V.y}}
+}else if(e.pointerType==='mouse'&&e.button!==0){mid.setPointerCapture(e.pointerId);gs={m:1,x:e.clientX,y:e.clientY,vx:V.x,vy:V.y}}
+})
+mid.addEventListener('pointermove',e=>{
+if(!gs)return
+if(gs.m){V.x=gs.vx+e.clientX-gs.x;V.y=gs.vy+e.clientY-gs.y;applyV();return}
+if(!ptr.has(e.pointerId))return
+ptr.set(e.pointerId,{x:e.clientX,y:e.clientY})
+if(ptr.size<2)return
+const g=gc(),r=mid.getBoundingClientRect(),z=Math.min(24,Math.max(.3,gs.z*g.d/gs.d)),wx=(gs.x-r.left-gs.vx)/gs.z,wy=(gs.y-r.top-gs.vy)/gs.z
+V.z=z;V.x=g.x-r.left-wx*z;V.y=g.y-r.top-wy*z;applyV()
+})
+const mup=e=>{ptr.delete(e.pointerId);if(gs&&(gs.m||ptr.size<2))gs=null}
+mid.addEventListener('pointerup',mup)
+mid.addEventListener('pointercancel',mup)
+mid.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,V.z*Math.exp(-e.deltaY*.0015))},{passive:false})
+$('#zr').onclick=fit
+
+const doUndo=()=>{if(S.hist.undo()){refresh();queueSync()}}
+const doRedo=()=>{if(S.hist.redo()){refresh();queueSync()}}
+$('#undo').onclick=doUndo
+$('#redo').onclick=doRedo
+$('#clr').onclick=()=>dialog('Hapus semua?','Seluruh gambar akan dihapus.',[['Batal'],['Hapus',()=>{S.lay.forEach(y=>{y.ctx.globalAlpha=1;if(y.bg){y.ctx.fillStyle='#fff';y.ctx.fillRect(0,0,S.w,S.h)}else y.ctx.clearRect(0,0,S.w,S.h)});hs('*')},1]])
+$('#dl').onclick=()=>flat(1).toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kanvas-'+Date.now()+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},'image/png')
+$('#exit').onclick=()=>dialog('Keluar?','Gambar yang belum diunduh akan hilang.',[['Batal'],['Keluar',exitStudio,1]])
+$('#chb').onclick=()=>{const c=$('#chat');c.classList.toggle('hide');if(!c.classList.contains('hide')){S.unread=0;badge();$('#msgs').scrollTop=1e9}}
+$('#cf').onsubmit=e=>{
+e.preventDefault()
+const t=$('#ci').value.trim().slice(0,200)
+if(!t||!S.link||!S.link.open)return
+addMsg(true,t);net({t:'chat',m:t});$('#ci').value=''
+}
+
+const tb=$('#tools')
+TOOLS.forEach(([id,label])=>{
+const b=document.createElement('button');b.innerHTML=ic(id);b.title=label;b.setAttribute('aria-label',label)
+if(id===S.tool)b.className='on'
+b.onclick=()=>{S.tool=id;[...tb.children].forEach(x=>x.className='');b.className='on';saveCfg()}
+tb.appendChild(b)
+})
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x))
+const hsv2rgb=(h,s,v)=>{const f=n=>{const k=(n+h/60)%6;return v-v*s*Math.max(0,Math.min(k,4-k,1))};return[f(5),f(3),f(1)].map(x=>Math.round(x*255))}
+const rgb2hsv=(r,g,b)=>{
+r/=255;g/=255;b/=255
+const mx=Math.max(r,g,b),d=mx-Math.min(r,g,b)
+let h=0
+if(d){h=(mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4)*60;if(h<0)h+=360}
+return[h,mx?d/mx:0,mx]
+}
+const toHex=(r,g,b)=>'#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('')
+const C={h:0,s:0,v:0,rgb:[0,0,0],tab:'rgb',mode:null,lh:-1,ups:[]}
+const wh=$('#wh'),wg=wh.getContext('2d'),WS=300,CX=150,RO=146,RI=102,DR=RI-9
+const ring=document.createElement('canvas')
+ring.width=ring.height=WS
+const dm=document.createElement('canvas')
+dm.width=dm.height=2*DR
+;(()=>{
+const g=ring.getContext('2d'),r=(RO+RI)/2
+g.lineWidth=RO-RI
+for(let a=0;a<360;a+=.5){g.beginPath();g.strokeStyle='hsl('+(360-a)+',100%,50%)';g.arc(CX,CX,r,(a-.7)*Math.PI/180,(a+.7)*Math.PI/180);g.stroke()}
+})()
+const drawDm=()=>{
+const g=dm.getContext('2d'),n=2*DR,id=g.createImageData(n,n),d=id.data,[hr,hg,hb]=hsv2rgb(C.h,1,1)
+for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+const dx=(x+.5-DR)/DR,dy=(y+.5-DR)/DR,s=(dx+dy+1)/2,v=(dx-dy+1)/2
+if(s<0||s>1||v<0||v>1)continue
+const i=(y*n+x)*4
+d[i]=v*(255*(1-s)+hr*s);d[i+1]=v*(255*(1-s)+hg*s);d[i+2]=v*(255*(1-s)+hb*s);d[i+3]=255
+}
+g.putImageData(id,0,0)
+}
+const knob=(x,y,col)=>{wg.beginPath();wg.arc(x,y,15,0,7);wg.fillStyle=col;wg.fill();wg.lineWidth=5;wg.strokeStyle='#d9d9e3';wg.stroke()}
+const paint=()=>{
+if(C.lh!==C.h){drawDm();C.lh=C.h}
+wg.clearRect(0,0,WS,WS);wg.drawImage(ring,0,0);wg.drawImage(dm,CX-DR,CX-DR)
+const a=(360-C.h)*Math.PI/180,rm=(RO+RI)/2
+knob(CX+rm*Math.cos(a),CX+rm*Math.sin(a),toHex(...hsv2rgb(C.h,1,1)))
+knob(CX+DR*(C.s+C.v-1),CX+DR*(C.s-C.v),toHex(...C.rgb))
+}
+const track=i=>{
+const lo=C.rgb.slice(),hi=C.rgb.slice()
+lo[i]=0;hi[i]=255
+return 'linear-gradient(90deg,rgb('+lo+'),rgb('+hi+'))'
+}
+const sync=()=>C.ups.forEach(f=>f())
+const apply=()=>{
+C.rgb=hsv2rgb(C.h,C.s,C.v)
+S.color=toHex(...C.rgb);saveCfg()
+$('#pvn').style.background=$('#cbtn').style.background=S.color
+$('#hx').textContent=S.color.toUpperCase()
+paint();sync()
+}
+const fromRgb=a=>{const[h,s,v]=rgb2hsv(...a);if(s>0&&v>0)C.h=h;if(v>0)C.s=s;C.v=v}
+const setVal=(i,v)=>{const a=C.rgb.slice();a[i]=v;fromRgb(a);apply()}
+const hold=(btn,f)=>{
+let t,iv
+const stop=()=>{clearTimeout(t);clearInterval(iv)}
+btn.onpointerdown=e=>{e.preventDefault();f();t=setTimeout(()=>{iv=setInterval(f,70)},350)}
+btn.onpointerup=btn.onpointerleave=btn.onpointercancel=stop
+}
+const mkRow=(box,label,mx,get,set,trk)=>{
+const r=document.createElement('div')
+r.className='rw'
+r.innerHTML='<span>'+label+'</span><button aria-label="Kurang">'+ic('minus')+'</button><input type="range" min="0" max="'+mx+'" step="1"><button aria-label="Tambah">'+ic('plus')+'</button><b></b>'
+const inp=r.querySelector('input'),b=r.querySelector('b')
+const upd=()=>{const v=get();inp.value=v;b.textContent=v;if(trk)inp.style.background=trk()}
+inp.oninput=()=>{set(+inp.value);upd()}
+const step=d=>{set(clamp(get()+d,0,mx));upd()}
+hold(r.children[1],()=>step(-1))
+hold(r.children[3],()=>step(1))
+box.appendChild(r)
+upd()
+return upd
+}
+const palette=(()=>{
+const a=[]
+for(let i=0;i<12;i++){const g=Math.round(i*255/11);a.push(toHex(g,g,g))}
+for(const[s,v] of [[1,1],[.55,1],[1,.6]])for(let h=0;h<360;h+=30)a.push(toHex(...hsv2rgb(h,s,v)))
+return a
+})()
+const NAMES=['Merah','Hijau','Biru']
+const buildRows=()=>{
+const box=$('#cr')
+box.innerHTML='';C.ups=[]
+if(C.tab==='pal'){
+const g=document.createElement('div')
+g.className='pg'
+palette.forEach(h=>{const b=document.createElement('button');b.style.background=h;b.onclick=()=>{fromRgb(hexRgb(h));apply()};g.appendChild(b)})
+box.appendChild(g)
+return
+}
+NAMES.forEach((n,i)=>C.ups.push(mkRow(box,n,255,()=>C.rgb[i],v=>setVal(i,v),()=>track(i))))
+}
+const TABS=[['pal','Palet'],['rgb','Mixer']]
+const buildTabs=()=>{
+const t=$('#ct')
+t.innerHTML=''
+TABS.forEach(([k,l])=>{
+const b=document.createElement('button')
+b.className=C.tab===k?'on':''
+b.textContent=l
+b.onclick=()=>{C.tab=k;buildTabs();buildRows()}
+t.appendChild(b)
+})
+}
+const wpos=e=>{const r=wh.getBoundingClientRect();return{x:(e.clientX-r.left)*WS/r.width,y:(e.clientY-r.top)*WS/r.height}}
+const drag=e=>{
+const{x,y}=wpos(e)
+if(C.mode==='h'){C.h=(((360-Math.atan2(y-CX,x-CX)*180/Math.PI)%360)+360)%360}
+else{const dx=(x-CX)/DR,dy=(y-CX)/DR;C.s=clamp((dx+dy+1)/2,0,1);C.v=clamp((dx-dy+1)/2,0,1)}
+apply()
+}
+wh.onpointerdown=e=>{
+const{x,y}=wpos(e)
+C.mode=Math.hypot(x-CX,y-CX)>RI-6?'h':'sv'
+wh.setPointerCapture(e.pointerId)
+drag(e)
+}
+wh.onpointermove=e=>{if(C.mode&&wh.hasPointerCapture(e.pointerId))drag(e)}
+wh.onpointerup=wh.onpointercancel=()=>{C.mode=null}
+$('#cbtn').onclick=()=>{
+fromRgb(hexRgb(S.color))
+$('#pvo').style.background=S.color
+C.lh=-1
+buildTabs();buildRows()
+$('#cpd').classList.remove('hide')
+apply()
+}
+$('#cpd').onclick=e=>{if(e.target===e.currentTarget||e.target.closest('#cx'))$('#cpd').classList.add('hide')}
+$('#sz').oninput=e=>{S.size=+e.target.value;$('#szv').textContent=S.size;saveCfg()}
+$('#cbtn').style.background=S.color
+$('#sz').value=S.size;$('#szv').textContent=S.size
+if([...$('#size').options].some(o=>o.value===S.sz))$('#size').value=S.sz
+$('#size').onchange=()=>{S.sz=$('#size').value;saveCfg()}
+$('#sbtn').onclick=()=>{
+const box=$('#sr')
+box.innerHTML=''
+;[['Stabilisator','stab'],['Awal kuas','ti'],['Akhir kuas','to'],['Toleransi sihir','tol']].forEach(([l,k])=>mkRow(box,l,100,()=>S[k],v=>{S[k]=v;saveCfg()}))
+$('#spd').classList.remove('hide')
+}
+$('#spd').onclick=e=>{if(e.target===e.currentTarget||e.target.closest('#sx'))$('#spd').classList.add('hide')}
+
+const drawLP=()=>{
+const b=$('#lr')
+b.innerHTML=''
+for(let i=S.lay.length-1;i>=0;i--){
+const y=S.lay[i],r=document.createElement('div')
+r.className='lr'+(y===S.cur?' on':'')
+r.innerHTML='<button class="ib">'+ic(y.v?'eye':'eyeoff')+'</button><span></span>'
+r.children[1].textContent=y.n
+r.children[0].onclick=()=>{y.v=!y.v;relayer();hs();drawLP()}
+r.children[1].onclick=()=>{S.cur=y;relayer();drawLP()}
+b.appendChild(r)
+}
+}
+$('#lb').onclick=()=>{drawLP();$('#lpd').classList.remove('hide')}
+$('#lpd').onclick=e=>{if(e.target===e.currentTarget||e.target.closest('#lx'))$('#lpd').classList.add('hide')}
+$('#la').onclick=()=>{
+if(S.lay.length>=12)return toast('Maksimal 12 layer')
+const y=mkLayer(++S.nid,'Layer '+S.nid,false)
+S.lay.splice(S.lay.indexOf(S.cur)+1,0,y);S.cur=y
+relayer();hs();drawLP()
+}
+$('#ld').onclick=()=>{
+if(S.lay.length<2)return toast('Minimal satu layer')
+const i=S.lay.indexOf(S.cur)
+S.lay.splice(i,1);S.cur=S.lay[Math.max(0,i-1)]
+relayer();hs();drawLP()
+}
+const mv=d=>{
+const i=S.lay.indexOf(S.cur),j=i+d
+if(j<0||j>=S.lay.length)return
+;[S.lay[i],S.lay[j]]=[S.lay[j],S.lay[i]]
+relayer();hs();drawLP()
+}
+$('#lu').onclick=()=>mv(1)
+$('#lw').onclick=()=>mv(-1)
+
+const rw=$('#rw'),rf=$('#rf')
+let ri=null
+const drawRef=()=>{
+const w=rf.clientWidth,h=rf.clientHeight
+rf.width=w;rf.height=h
+const g=rf.getContext('2d')
+if(!ri){g.fillStyle='#94a3b8';g.font='12px system-ui';g.textAlign='center';g.fillText('Ketuk untuk muat gambar',w/2,h/2);return}
+const k=Math.min(w/ri.width,h/ri.height),iw=ri.width*k,ih=ri.height*k
+g.drawImage(ri,(w-iw)/2,(h-ih)/2,iw,ih)
+}
+$('#rb').onclick=()=>{rw.classList.toggle('hide');if(!rw.classList.contains('hide'))drawRef()}
+$('#rc').onclick=()=>rw.classList.add('hide')
+$('#rl').onclick=()=>$('#rfi').click()
+rf.onclick=()=>{if(!ri)$('#rfi').click()}
+$('#rfi').onchange=e=>{
+const f=e.target.files[0]
+if(!f)return
+const im=new Image(),u=URL.createObjectURL(f)
+im.onload=()=>{ri=im;drawRef();URL.revokeObjectURL(u)}
+im.src=u
+e.target.value=''
+}
+rf.onpointerdown=rf.onpointermove=e=>{
+if(!ri||!e.buttons)return
+const r=rf.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)*rf.width/r.width),y=Math.floor((e.clientY-r.top)*rf.height/r.height)
+if(x<0||y<0||x>=rf.width||y>=rf.height)return
+const d=rf.getContext('2d').getImageData(x,y,1,1).data
+if(d[3]<255)return
+fromRgb([d[0],d[1],d[2]]);apply()
+}
+const dragIt=(h,f)=>{
+let s=null
+h.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;h.setPointerCapture(e.pointerId);s={x:e.clientX,y:e.clientY,l:rw.offsetLeft,t:rw.offsetTop,w:rw.offsetWidth,h:rw.offsetHeight}})
+h.addEventListener('pointermove',e=>{if(s)f(e.clientX-s.x,e.clientY-s.y,s)})
+h.addEventListener('pointerup',()=>{s=null})
+h.addEventListener('pointercancel',()=>{s=null})
+}
+dragIt($('#rh'),(dx,dy,s)=>{rw.style.left=Math.min(innerWidth-60,Math.max(60-s.w,s.l+dx))+'px';rw.style.top=Math.min(innerHeight-40,Math.max(0,s.t+dy))+'px'})
+dragIt($('#rg'),(dx,dy,s)=>{rw.style.width=Math.min(innerWidth-8,Math.max(120,s.w+dx))+'px';rw.style.height=Math.min(innerHeight-8,Math.max(110,s.h+dy))+'px';drawRef()})
+
+const PF={n:'',img:'',c:Math.floor(Math.random()*6)}
+try{Object.assign(PF,JSON.parse(localStorage.getItem('kanvas-pf')||'{}'))}catch(x){}
+PF.n=String(PF.n||'').slice(0,14);PF.c=(+PF.c||0)%6
+if(!/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(PF.img||''))PF.img=''
+const savePF=()=>{try{localStorage.setItem('kanvas-pf',JSON.stringify(PF))}catch(x){}}
+const COLS=['#4f46e5','#db2777','#059669','#d97706','#0891b2','#7c3aed']
+const setAv=(el,p)=>{el.style.backgroundImage=p.img?'url('+p.img+')':'';el.style.backgroundColor=COLS[(p.c|0)%6];el.textContent=p.img?'':((p.n||'?').trim().charAt(0).toUpperCase()||'?')}
+const prof=()=>{PF.n=($('#nm').value.trim()||'Pemain').slice(0,14);savePF();return{n:PF.n,img:PF.img,c:PF.c}}
+const sanP=p=>({n:String(p&&p.n||'Teman').slice(0,14),img:p&&typeof p.img==='string'&&p.img.length<30000&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(p.img)?p.img:'',c:((p&&+p.c)|0)%6})
+$('#nm').value=PF.n;setAv($('#av'),PF)
+$('#nm').oninput=e=>{PF.n=e.target.value.slice(0,14);savePF();setAv($('#av'),PF)}
+$('#av').onclick=()=>$('#avf').click()
+$('#avf').onchange=e=>{
+const f=e.target.files[0]
+e.target.value=''
+if(!f)return
+const im=new Image(),u=URL.createObjectURL(f)
+im.onload=()=>{
+const c=document.createElement('canvas'),m=Math.min(im.width,im.height)
+c.width=c.height=72
+c.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,72,72)
+PF.img=c.toDataURL('image/jpeg',.7);savePF();setAv($('#av'),PF);URL.revokeObjectURL(u)
+}
+im.src=u
+}
+const updOpp=()=>{
+const a=$('#oa')
+if(S.opp){setAv(a,S.opp);a.classList.remove('hide')}else a.classList.add('hide')
+setSt(S.opp?S.opp.n:'Terhubung',true)
+}
+const fmt=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0')
+const tick=()=>{
+if(!S.duo||S.over)return
+const e=$('#tm')
+if(!S.end){e.textContent='Manual';return}
+const t=Math.max(0,Math.ceil((S.end-Date.now())/1000))
+e.textContent=fmt(t)
+e.style.color=t<=30?'#dc2626':''
+if(t>0)return
+if(S.cfg.role==='host')hostEnd()
+else if(Date.now()>S.end+8000)endRound()
+}
+const hostEnd=()=>{if(S.over)return;net({t:'end'});endRound()}
+$('#fn').onclick=()=>dialog('Selesaikan sekarang?','Waktu menggambar berakhir untuk semua pemain dan hasil dibuka.',[['Batal'],['Selesai',hostEnd,1]])
+const dlUrl=(u,x)=>{const a=document.createElement('a');a.href=u;a.download='kanvas-'+Date.now()+'.'+x;document.body.appendChild(a);a.click();a.remove()}
+const renderRv=()=>{
+const b=$('#rvc')
+b.innerHTML=''
+const card=(p,img,x,msg)=>{
+const d=document.createElement('div'),h=document.createElement('div'),a=document.createElement('span'),n=document.createElement('span')
+d.className='rc';h.className='hd';a.className='av';a.style.cssText='width:32px;height:32px;font-size:14px'
+setAv(a,p);n.textContent=p.n
+h.append(a,n);d.appendChild(h)
+if(img){
+const im=document.createElement('img'),bt=document.createElement('button')
+im.src=img;bt.className='btn';bt.textContent='Unduh';bt.onclick=()=>dlUrl(img,x)
+d.append(im,bt)
+}else{const t=document.createElement('div');t.className='ph2';t.textContent=msg;d.appendChild(t)}
+b.appendChild(d)
+}
+card({n:(PF.n||'Pemain')+' (kamu)',img:PF.img,c:PF.c},S.mineUrl,'png','Menyiapkan gambar...')
+card(S.opp||{n:'Teman',img:'',c:1},S.oppUrl,'jpg',S.link&&S.link.open?'Menerima gambar...':'Gambar tidak diterima')
+}
+const endRound=()=>{
+if(S.over||!S.duo)return
+S.over=true
+clearInterval(S.tmr)
+finish()
+$('#tm').textContent='Selesai';$('#tm').style.color=''
+S.hist.past=[];S.hist.fut=[];refresh()
+const m=S.mine=flat(1),u=m.toDataURL('image/jpeg',.88)
+if(S.link&&S.link.open){const id=Date.now(),n=Math.ceil(u.length/CHUNK);for(let i=0;i<n;i++)S.link.send({t:'fin',id,n,i,d:u.slice(i*CHUNK,(i+1)*CHUNK)})}
+$('#rv').classList.remove('hide')
+renderRv()
+m.toBlob(b=>{if(S.mine!==m||!b)return;S.mineUrl=URL.createObjectURL(b);renderRv()},'image/png')
+}
+$('#rx').onclick=exitStudio
+
+const NT='https:' +'/'+'/ntfy.sh/'
+const ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+const randCode=()=>Array.from({length:5},()=>ALPHA[Math.floor(Math.random()*ALPHA.length)]).join('')
+const sigPost=(c,o)=>fetch(NT+'kanvas-'+c,{method:'POST',body:JSON.stringify(o)})
+const sigListen=(c,all,fn)=>{
+const es=new EventSource(NT+'kanvas-'+c+'/sse'+(all?'?since=all':''))
+es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')fn(JSON.parse(d.message))}catch(x){}}
+return es
+}
+const sizeVal=()=>$('#size').value.split('x').map(Number)
+
+let pend=null
+const ps=t=>{$('#ps').textContent=t}
+const dropPend=()=>{if(pend){clearTimeout(pend.t1);clearTimeout(pend.t2);pend.es&&pend.es.close();pend=null}}
+const cancelPair=()=>{if(pend&&pend.link)pend.link.close();dropPend();show('menu')}
+$('#back').onclick=cancelPair
+
+$('#solo').onclick=()=>{const[w,h]=sizeVal();startStudio({mode:'solo',w,h},null)}
+
+$('#host').onclick=async()=>{
+const[w,h]=sizeVal(),link=new Link(),code=randCode(),dur=+$('#dur').value*60,me=prof()
+dropPend()
+pend={link}
+$('#pt').textContent='Room Duo';$('#p1').textContent='Berikan kode ini ke temanmu.'
+$('#code').textContent=code;$('#code').classList.remove('hide')
+$('#jin').classList.add('hide');$('#go').classList.add('hide')
+ps('Menyiapkan room...')
+show('pair')
+let done=false
+link.on.open=()=>{
+dropPend()
+startStudio({mode:'duo',role:'host',w,h,dur},link)
+link.send({t:'init',w,h,dur,p:me})
+}
+pend.es=sigListen(code,false,async m=>{
+if(m.k!=='answer'||done)return
+done=true
+try{await link.accept(m.s);ps('Teman bergabung, menghubungkan...')}catch(x){done=false}
+})
+try{
+const off=await link.offer()
+await sigPost(code,{k:'offer',s:off})
+ps('Menunggu teman memasukkan kode...')
+}catch(x){ps('Gagal membuat room. Periksa koneksi internet.')}
+}
+
+$('#join').onclick=()=>{
+dropPend()
+$('#pt').textContent='Gabung Room Duo';$('#p1').textContent='Masukkan kode 5 huruf dari temanmu.'
+$('#code').classList.add('hide')
+$('#jin').classList.remove('hide');$('#go').classList.remove('hide');$('#go').disabled=false
+$('#jin').value='';ps('')
+show('pair')
+}
+$('#jin').oninput=e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,5)}
+
+$('#go').onclick=()=>{
+const code=$('#jin').value
+if(code.length!==5){ps('Kode harus 5 karakter');return}
+dropPend()
+const link=new Link()
+pend={link}
+let joined=false
+const fail=t=>{ps(t);joined=false;dropPend();$('#go').disabled=false}
+$('#go').disabled=true
+ps('Mencari room...')
+link.on.data=d=>{
+if(d.t==='init'){dropPend();startStudio({mode:'duo',role:'guest',w:+d.w,h:+d.h,dur:+d.dur||0},link);S.opp=sanP(d.p);updOpp();link.send({t:'hello',p:prof()})}
+}
+pend.es=sigListen(code,true,m=>{
+if(m.k!=='offer'||joined)return
+clearTimeout(pend.t1)
+pend.t1=setTimeout(async()=>{
+joined=true
+ps('Menghubungkan...')
+clearTimeout(pend.t2)
+pend.t2=setTimeout(()=>{link.close();fail('Gagal terhubung, coba lagi')},25000)
+try{
+const ans=await link.answerTo(m.s)
+await sigPost(code,{k:'answer',s:ans})
+}catch(x){link.close();fail('Gagal terhubung, coba lagi')}
+},600)
+})
+pend.t2=setTimeout(()=>{if(!joined){link.close();fail('Room tidak ditemukan')}},10000)
+}
+
+new ResizeObserver(fit).observe($('#mid'))
+addEventListener('resize',fit)
+
+const lock=e=>e.preventDefault()
+document.addEventListener('gesturestart',lock)
+document.addEventListener('gesturechange',lock)
+document.addEventListener('gestureend',lock)
+document.addEventListener('contextmenu',e=>{if(e.target===cv)e.preventDefault()})
+document.addEventListener('touchmove',e=>{if(e.touches.length>1||!e.target.closest('#msgs,#lr,#rvc,textarea,input[type=range]'))e.preventDefault()},{passive:false})
+document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})
+document.addEventListener('wheel',e=>{if(e.ctrlKey||!e.target.closest('#msgs,#lr,#rvc,textarea,input[type=range]'))e.preventDefault()},{passive:false})
+document.addEventListener('dblclick',lock)
+addEventListener('scroll',()=>scrollTo(0,0))
+addEventListener('keydown',e=>{
+const mod=e.ctrlKey||e.metaKey
+if(mod&&['+','-','=','0','_'].includes(e.key))e.preventDefault()
+if(['PageUp','PageDown','Home','End',' '].includes(e.key)&&!e.target.closest('input,textarea'))e.preventDefault()
+if(!mod||!S.hist||$('#studio').classList.contains('hide')||e.target.closest('input,textarea'))return
+const k=e.key.toLowerCase()
+if(k==='z'&&!e.shiftKey){e.preventDefault();doUndo()}
+else if(k==='y'||(k==='z'&&e.shiftKey)){e.preventDefault();doRedo()}
+})
+addEventListener('pagehide',()=>S.link&&S.link.close())
+</script>
+</body>
+</html>
