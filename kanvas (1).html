@@ -44,6 +44,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 #cf input{flex:1;min-width:0;border:1px solid #e2e8f0;border-radius:8px;padding:8px;font:inherit;user-select:text;-webkit-user-select:text}
 #bd{position:fixed;inset:0;background:#0f172a88;display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
 #bd .card{max-width:340px}
+#bd .row{flex-wrap:wrap}
 .row{display:flex;gap:8px;justify-content:flex-end}
 #code,#jin{text-align:center;font:700 34px monospace;letter-spacing:.35em;padding:12px 0 12px .35em;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;color:#0f172a;width:100%;user-select:text;-webkit-user-select:text}
 #jin{background:#fff;text-transform:uppercase}
@@ -480,17 +481,18 @@ btns.forEach(([l,f,pri])=>{const b=document.createElement('button');b.className=
 bd.innerHTML='';bd.appendChild(card);bd.classList.remove('hide')
 }
 
-const V={z:1,x:0,y:0,k:1}
+const V={z:1,x:0,y:0,k:1,r:0}
 const applyV=()=>{
-const m=$('#mid'),W=S.w*V.k*V.z,H=S.h*V.k*V.z
-V.x=Math.min(m.clientWidth-40,Math.max(40-W,V.x));V.y=Math.min(m.clientHeight-40,Math.max(40-H,V.y))
-$('#cw').style.transform='translate('+V.x+'px,'+V.y+'px) scale('+V.z+')'
+const m=$('#mid'),c=Math.cos(V.r),s=Math.sin(V.r),W=S.w*V.k*V.z,H=S.h*V.k*V.z
+const x0=Math.min(0,W*c,W*c-H*s,-H*s),x1=Math.max(0,W*c,W*c-H*s,-H*s),y0=Math.min(0,W*s,W*s+H*c,H*c),y1=Math.max(0,W*s,W*s+H*c,H*c)
+V.x=Math.min(m.clientWidth-40-x0,Math.max(40-x1,V.x));V.y=Math.min(m.clientHeight-40-y0,Math.max(40-y1,V.y))
+$('#cw').style.transform='translate('+V.x+'px,'+V.y+'px) rotate('+V.r+'rad) scale('+V.z+')'
 $('#lys').style.imageRendering=V.z*V.k>2?'pixelated':'auto'
 $('#zr').textContent=Math.round(V.z*V.k*100)+'%'
 }
 const fit=()=>{
 const m=$('#mid'),k=Math.max(.05,Math.min((m.clientWidth-24)/S.w,(m.clientHeight-24)/S.h,2)),w=$('#cw')
-V.k=k;V.z=1;V.x=(m.clientWidth-S.w*k)/2;V.y=(m.clientHeight-S.h*k)/2
+V.k=k;V.z=1;V.r=0;V.x=(m.clientWidth-S.w*k)/2;V.y=(m.clientHeight-S.h*k)/2
 w.style.width=S.w*k+'px';w.style.height=S.h*k+'px'
 applyV()
 }
@@ -535,12 +537,13 @@ $('#lys').replaceChildren(...S.lay.map(y=>y.cv))
 S.lay.forEach(y=>{y.cv.style.display=y.v?'':'none'})
 S.ctx=S.cur.ctx;S.loc.setLayer(S.cur);S.rem.setLayer(S.cur.ref?S.lay.find(y=>!y.ref):S.cur)
 }
-const flat=n=>{
+const flat=(n,tr)=>{
 const t=n?document.createElement('canvas'):tmp(2)
 t.width=S.w;t.height=S.h
 const g=t.getContext('2d')
-g.fillStyle='#fff';g.fillRect(0,0,S.w,S.h)
-S.lay.forEach(y=>{if(y.v&&!y.ref){g.globalAlpha=y.op/100;g.drawImage(y.cv,0,0)}})
+if(!tr){g.fillStyle='#fff';g.fillRect(0,0,S.w,S.h)}
+S.lay.forEach(y=>{if(y.v&&!y.ref){g.globalAlpha=y.op/100
+if(tr&&y.bg){const q=tmp(3),h=q.getContext('2d');h.drawImage(y.cv,0,0);const im=h.getImageData(0,0,S.w,S.h),d=im.data;for(let i=0;i<d.length;i+=4)if(d[i]===255&&d[i+1]===255&&d[i+2]===255)d[i+3]=0;h.putImageData(im,0,0);g.drawImage(q,0,0)}else g.drawImage(y.cv,0,0)}})
 g.globalAlpha=1
 return t
 }
@@ -672,7 +675,7 @@ $('#rw').classList.add('hide');$('#lpd').classList.add('hide');$('#rv').classLis
 show('menu')
 }
 
-const point=(e,r)=>({x:(e.clientX-r.left)*S.w/r.width,y:(e.clientY-r.top)*S.h/r.height})
+const point=(e,r)=>{const c=Math.cos(V.r),s=Math.sin(V.r),dx=e.clientX-r.left-V.x,dy=e.clientY-r.top-V.y,k=V.k*V.z;return{x:(dx*c+dy*s)/k,y:(dy*c-dx*s)/k}}
 let rect=null,tap=null,gs=null
 const ptr=new Map()
 const tapAct=(x,y)=>{
@@ -689,23 +692,24 @@ hd()
 
 }
 const abort=()=>{finish();doUndo();S.hist.fut=[]}
-cv.addEventListener('pointerdown',e=>{
-if(S.over||S.aid!==null||tap||(e.pointerType==='touch'&&!e.isPrimary)||(e.pointerType==='mouse'&&e.button!==0))return
+$('#mid').addEventListener('pointerdown',e=>{
+if(e.target.closest('#selbar,#chat')||S.over||S.aid!==null||tap||(e.pointerType==='touch'&&!e.isPrimary)||(e.pointerType==='mouse'&&e.button!==0))return
 if(S.cur.ref)return toast('Layer galeri hanya referensi')
-rect=cv.getBoundingClientRect()
+rect=mid.getBoundingClientRect()
 const{x,y}=point(e,rect)
 if(S.tool==='wand'||S.tool==='fill'){
+if(x<0||y<0||x>=S.w||y>=S.h)return
 if(S.tool==='fill'&&!S.cur.v)return toast('Layer tersembunyi')
-tap={id:e.pointerId,x:e.clientX,y:e.clientY,px:x,py:y};cv.setPointerCapture(e.pointerId);return
+tap={id:e.pointerId,x:e.clientX,y:e.clientY,px:x,py:y};e.currentTarget.setPointerCapture(e.pointerId);return
 }
 if(!S.cur.v)return toast('Layer tersembunyi')
-cv.setPointerCapture(e.pointerId);S.aid=e.pointerId
+e.currentTarget.setPointerCapture(e.pointerId);S.aid=e.pointerId
 S.sp={x,y};S.raw={x,y}
 S.loc.mask=S.sel?S.sel.cv:null
 const p={tool:S.tool,color:S.color,size:S.size,ti:S.ti*3,to:S.to*3,sel:!!S.sel}
 S.loc.begin(p,x,y)
 })
-cv.addEventListener('pointermove',e=>{
+$('#mid').addEventListener('pointermove',e=>{
 if(S.aid!==e.pointerId)return
 const r=point(e,rect),k=kStab()
 S.raw=r
@@ -716,11 +720,12 @@ const up=e=>{
 if(S.aid===e.pointerId)finish()
 else if(tap&&tap.id===e.pointerId){const t=tap;tap=null;if(e.type==='pointerup'&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<12)tapAct(t.px,t.py)}
 }
-cv.addEventListener('pointerup',up)
-cv.addEventListener('pointercancel',up)
+$('#mid').addEventListener('pointerup',up)
+$('#mid').addEventListener('pointercancel',up)
 
 const mid=$('#mid')
-const gc=()=>{const a=[...ptr.values()];return{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2,d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1}}
+let raf=0
+const gc=()=>{const a=[...ptr.values()];return{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2,d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1,a:Math.atan2(a[1].y-a[0].y,a[1].x-a[0].x)}}
 const zoomAt=(cx,cy,nz)=>{
 const r=mid.getBoundingClientRect(),px=cx-r.left,py=cy-r.top
 nz=Math.min(24,Math.max(.3,nz))
@@ -732,7 +737,7 @@ if(e.target.closest('#selbar,#chat'))return
 if(e.pointerType==='touch'){
 if(e.isPrimary){ptr.clear();gs=null}
 ptr.set(e.pointerId,{x:e.clientX,y:e.clientY})
-if(ptr.size===2){tap=null;if(S.aid!==null)abort();const g=gc();gs={x:g.x,y:g.y,d:g.d,z:V.z,vx:V.x,vy:V.y}}
+if(ptr.size===2){tap=null;if(S.aid!==null)abort();const g=gc();gs={x:g.x,y:g.y,d:g.d,a:g.a,r:V.r,z:V.z,vx:V.x,vy:V.y}}
 }else if(e.pointerType==='mouse'&&e.button!==0){mid.setPointerCapture(e.pointerId);gs={m:1,x:e.clientX,y:e.clientY,vx:V.x,vy:V.y}}
 })
 mid.addEventListener('pointermove',e=>{
@@ -741,8 +746,11 @@ if(gs.m){V.x=gs.vx+e.clientX-gs.x;V.y=gs.vy+e.clientY-gs.y;applyV();return}
 if(!ptr.has(e.pointerId))return
 ptr.set(e.pointerId,{x:e.clientX,y:e.clientY})
 if(ptr.size<2)return
-const g=gc(),r=mid.getBoundingClientRect(),z=Math.min(24,Math.max(.3,gs.z*g.d/gs.d)),wx=(gs.x-r.left-gs.vx)/gs.z,wy=(gs.y-r.top-gs.vy)/gs.z
-V.z=z;V.x=g.x-r.left-wx*z;V.y=g.y-r.top-wy*z;applyV()
+const g=gc(),r=mid.getBoundingClientRect(),z=Math.min(24,Math.max(.3,gs.z*g.d/gs.d)),dx=gs.x-r.left-gs.vx,dy=gs.y-r.top-gs.vy,c0=Math.cos(gs.r),s0=Math.sin(gs.r),wx=(dx*c0+dy*s0)/gs.z,wy=(dy*c0-dx*s0)/gs.z
+V.r=gs.r+g.a-gs.a
+const c=Math.cos(V.r),s=Math.sin(V.r)
+V.z=z;V.x=g.x-r.left-z*(wx*c-wy*s);V.y=g.y-r.top-z*(wx*s+wy*c)
+if(!raf)raf=requestAnimationFrame(()=>{raf=0;applyV()})
 })
 const mup=e=>{ptr.delete(e.pointerId);if(gs&&(gs.m||ptr.size<2))gs=null}
 mid.addEventListener('pointerup',mup)
@@ -755,8 +763,8 @@ const doRedo=()=>{if(S.hist.redo()){refresh();queueSync();AS.all=true;queueSave(
 $('#undo').onclick=doUndo
 $('#redo').onclick=doRedo
 $('#clr').onclick=()=>dialog('Hapus semua?','Seluruh gambar akan dihapus.',[['Batal'],['Hapus',()=>{S.lay.forEach(y=>{if(y.ref)return;y.ctx.globalAlpha=1;if(y.bg){y.ctx.fillStyle='#fff';y.ctx.fillRect(0,0,S.w,S.h)}else y.ctx.clearRect(0,0,S.w,S.h)});hs('*')},1]])
-const dlFlat=(t,q,x)=>flat(1).toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kanvas-'+Date.now()+'.'+x;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},t,q)
-$('#dl').onclick=()=>dialog('Unduh gambar','Pilih format',[['Batal'],['JPG',()=>dlFlat('image/jpeg',.92,'jpg')],['PNG',()=>dlFlat('image/png',undefined,'png'),1]])
+const dlFlat=(t,q,x,tr)=>flat(1,tr).toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kanvas-'+Date.now()+'.'+x;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},t,q)
+$('#dl').onclick=()=>dialog('Unduh gambar','Pilih format',[['Batal'],['JPG',()=>dlFlat('image/jpeg',.92,'jpg')],['Transparan',()=>dlFlat('image/png',undefined,'png',1)],['PNG',()=>dlFlat('image/png',undefined,'png'),1]])
 $('#exit').onclick=()=>dialog('Keluar?','Gambar yang belum diunduh akan hilang.',[['Batal'],['Keluar',exitStudio,1]])
 $('#chb').onclick=()=>{const c=$('#chat');c.classList.toggle('hide');if(!c.classList.contains('hide')){S.unread=0;badge();$('#msgs').scrollTop=1e9}}
 $('#cf').onsubmit=e=>{
