@@ -102,9 +102,23 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 .rc .hd{display:flex;align-items:center;gap:8px;font-weight:700}
 .rc img{width:100%;border-radius:8px;border:1px solid #e2e8f0;background:#fff}
 .rc .ph2{padding:30px 0;text-align:center;color:#64748b;font-size:13px}
+#sub{position:fixed;inset:0;background:#0f172acc;display:flex;align-items:center;justify-content:center;padding:16px;z-index:100}
+#sub .card{max-width:340px;align-items:center;text-align:center}
+#sub .yt{width:56px;height:56px;border-radius:16px;background:#ef4444;color:#fff;display:grid;place-items:center}
+#sub .yt svg{width:30px;height:30px;fill:currentColor;stroke:none}
+#sub a.btn{width:100%;text-align:center;text-decoration:none;display:block;background:#ef4444;border-color:#ef4444;color:#fff}
 </style>
 </head>
 <body>
+<div id="sub" class="hide">
+<div class="card">
+<div class="yt"><svg viewBox="0 0 24 24"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2C.5 9.1.5 12 .5 12s0 2.9.5 4.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-4.8.5-4.8s0-2.9-.5-4.8zM9.8 15.4V8.6l5.9 3.4-5.9 3.4z"/></svg></div>
+<h2>Dukung Kami</h2>
+<p>Subscribe channel YouTube kami untuk melanjutkan.</p>
+<a id="subbtn" class="btn pri" href="https://youtube.com/@wgofarchersurvival" target="_blank" rel="noopener">Subscribe</a>
+</div>
+</div>
+
 <div id="menu" class="scr">
 <div class="card">
 <div class="logo"><span data-i="logo"></span><h1>Kanvas</h1></div>
@@ -1135,6 +1149,19 @@ if(k==='z'&&!e.shiftKey){e.preventDefault();doUndo()}
 else if(k==='y'||(k==='z'&&e.shiftKey)){e.preventDefault();doRedo()}
 })
 addEventListener('pagehide',()=>S.link&&S.link.close())
+</script>
+<script>
+(()=>{
+const K='wg-subscribed'
+const box=document.getElementById('sub')
+let done=false
+try{done=localStorage.getItem(K)==='1'}catch(x){}
+if(!done)box.classList.remove('hide')
+document.getElementById('subbtn').addEventListener('click',()=>{
+try{localStorage.setItem(K,'1')}catch(x){}
+box.classList.add('hide')
+})
+})()
 </script>
 </body>
 </html>
