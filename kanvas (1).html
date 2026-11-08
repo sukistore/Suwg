@@ -20,7 +20,7 @@ button,select,textarea{font:inherit}
 .btn:disabled{opacity:.4}
 select,textarea{width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:10px;background:#fff;color:#0f172a}
 textarea{height:96px;resize:none;font:11px monospace;user-select:text;-webkit-user-select:text;touch-action:pan-y;overflow:auto}
-#top,#cols{display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:4px 6px;background:#fff;border-bottom:1px solid #e2e8f0}
+#top,#cols{display:flex;flex-wrap:wrap;align-items:center;gap:0;padding:4px 6px;background:#fff;border-bottom:1px solid #e2e8f0}
 .ib{width:40px;height:40px;flex:none;border:0;border-radius:10px;background:none;color:#475569;cursor:pointer;position:relative}
 .ib:active{background:#f1f5f9}
 .ib:disabled{opacity:.3}
@@ -32,7 +32,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 #st{font-size:12px;color:#b45309;padding:0 6px}
 #st.ok{color:#047857}
 #mid{flex:1;min-height:0;position:relative;overflow:hidden;background:#e2e8f0;touch-action:none}
-#tools{display:flex;gap:2px;padding:4px;background:#fff;border-top:1px solid #e2e8f0;padding-bottom:max(4px,env(safe-area-inset-bottom))}
+#tools{display:flex;justify-content:center;gap:2px;padding:4px;background:#fff;border-top:1px solid #e2e8f0;padding-bottom:max(4px,env(safe-area-inset-bottom))}
 #tools button{flex:1;max-width:64px;height:48px;border:0;border-radius:10px;background:none;color:#475569;cursor:pointer}
 #tools button.on{background:#4f46e5;color:#fff;box-shadow:0 3px 8px #4f46e566}
 #toast{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:8px 14px;border-radius:99px;font-size:13px;pointer-events:none}
@@ -50,7 +50,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 #jin{background:#fff;text-transform:uppercase}
 #cbtn{width:40px;height:40px;border-radius:50%;border:3px solid #cbd5e1;box-shadow:inset 0 0 0 2px #fff;padding:0;background:#111827;cursor:pointer;flex:none}
 #cols input[type=range]{flex:1;min-width:0;height:32px;accent-color:#4f46e5}
-#cpd,#spd,#lpd{position:fixed;inset:0;background:#0f172a66;display:flex;align-items:center;justify-content:center;padding:10px;z-index:30}
+#cpd,#spd,#lpd,#bpd,#gpd{position:fixed;inset:0;background:#0f172a66;display:flex;align-items:center;justify-content:center;padding:10px;z-index:30}
 .pn{width:100%;max-width:400px;max-height:100%;background:#fff;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;overflow:hidden;box-shadow:0 8px 20px #0004}
 .ph{display:flex;align-items:center;gap:8px}
 .ph h2{flex:1;font-size:18px}
@@ -79,7 +79,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 #lys{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 #cv{pointer-events:auto!important;touch-action:none;z-index:9}
 #selbar{position:absolute;top:8px;left:8px;display:flex;gap:4px;z-index:4}
-#selbar button{border:0;border-radius:99px;background:#fff;box-shadow:0 1px 4px #0003;padding:10px 16px;font-weight:600;font-size:14px;color:#4f46e5}
+#selbar button{border:0;border-radius:99px;background:#fff;box-shadow:0 1px 4px #0003;padding:10px 16px;font-weight:600;font-size:14px;color:#1e293b}
 .badge{position:absolute;top:0;right:0;background:#ef4444;color:#fff;border-radius:99px;font-size:10px;padding:1px 5px}
 #lr{display:flex;flex-direction:column;gap:4px;max-height:42dvh;overflow-y:auto;touch-action:pan-y}
 .lr{display:flex;align-items:center;gap:2px;border:1px solid #e2e8f0;border-radius:10px;padding:2px 8px 2px 2px}
@@ -87,9 +87,9 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 .lr span{flex:1;padding:12px 4px;font-weight:600;font-size:14px;cursor:pointer}
 .lx{display:grid;grid-template-columns:70px 1fr;gap:4px 8px;align-items:center;font-size:12px;font-weight:600;padding:6px 8px 8px;border:1px solid #4f46e5;border-radius:10px;background:#f8fafc}.lx input{width:100%}
 #zr{width:auto;min-width:50px;padding:0 6px;font-size:12px;font-weight:600}
-#rw{position:fixed;left:12px;top:120px;width:200px;height:200px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 8px 24px #0004;z-index:15;display:flex;flex-direction:column;overflow:hidden;touch-action:none}
+#rw{position:fixed;left:12px;top:120px;width:236px;height:200px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 8px 24px #0004;z-index:15;display:flex;flex-direction:column;overflow:hidden;touch-action:none}
 #rh{display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:600;background:#f1f5f9;cursor:move;touch-action:none}
-#rh span{flex:1}
+#rh span{flex:1;overflow:hidden;white-space:nowrap}
 #rh .ib{width:30px;height:30px}
 #rf{flex:1;min-height:0;width:100%;display:block;cursor:crosshair}
 #rg{position:absolute;right:0;bottom:0;width:28px;height:28px;cursor:nwse-resize;touch-action:none;background:linear-gradient(135deg,transparent 50%,#94a3b8 50%)}
@@ -110,6 +110,16 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 #sub .yt svg{width:30px;height:30px;fill:currentColor;stroke:none}
 #sub a.btn{width:100%;text-align:center;text-decoration:none;display:block;background:#ef4444;border-color:#ef4444;color:#fff}
 #gd{position:absolute;inset:0;z-index:8;pointer-events:none;background-image:linear-gradient(to right,#4f46e54d 1px,transparent 1px),linear-gradient(#4f46e54d 1px,transparent 1px)}
+#cols{flex-wrap:nowrap;gap:2px}
+#tools #bbtn{flex:2.4;max-width:148px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 8px;font-size:12px;font-weight:600}
+#bbtn svg,.bi svg{margin:0;flex:none}
+#bbtn span,.bi span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#bpv{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;height:72px;flex:none}
+#bpc{width:100%;height:100%;display:block}
+#bpn{text-align:center;font-weight:700;font-size:15px}
+#bl{display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow-y:auto;touch-action:pan-y;max-height:42dvh}
+.bi{display:flex;align-items:center;gap:8px;min-height:46px;padding:6px 10px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;color:#1e293b;font-weight:600;font-size:13px;text-align:left;cursor:pointer}
+.bi.on{background:#eef2ff;border-color:#4f46e5;color:#4f46e5}
 </style>
 </head>
 <body>
@@ -199,14 +209,16 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 <div id="sr"></div>
 </div>
 </div>
+<div id="bpd" class="hide"><div class="pn"><div class="ph"><h2>Kuas</h2><button class="ib" id="bx" data-i="x" aria-label="Tutup"></button></div><div id="bpv"><canvas id="bpc" width="360" height="72"></canvas></div><div id="bpn"></div><div id="bl"></div></div></div>
 <div id="lpd" class="hide"><div class="pn"><div class="ph"><h2>Layer</h2><button class="ib" id="lx" data-i="x" aria-label="Tutup"></button></div><div id="lr"></div><button class="btn" id="lg">Galeri</button><input type="file" id="lgf" accept="image/*" class="hide"><div class="row" style="justify-content:space-between"><button class="btn" id="la">+ Tambah</button><button class="btn" id="ld">Hapus</button><button class="ib" id="lu" data-i="up" aria-label="Naik"></button><button class="ib" id="lw" data-i="down" aria-label="Turun"></button></div></div></div>
-<div id="rw" class="hide"><div id="rh"><span>Referensi</span><button class="ib" id="rl" data-i="image" aria-label="Muat gambar"></button><button class="ib" id="rc" data-i="x" aria-label="Tutup"></button></div><canvas id="rf"></canvas><div id="rg"></div><input type="file" id="rfi" accept="image/*" class="hide"></div>
+<div id="rw" class="hide"><div id="rh"><span>Referensi</span><button class="ib" id="rzo" data-i="minus" aria-label="Perkecil"></button><button class="ib" id="rzi" data-i="plus" aria-label="Perbesar"></button><button class="ib" id="rl" data-i="image" aria-label="Muat gambar"></button><button class="ib" id="rc" data-i="x" aria-label="Tutup"></button></div><canvas id="rf"></canvas><div id="rg"></div><input type="file" id="rfi" accept="image/*" class="hide"></div>
 <div id="rv" class="hide"><div class="pn" style="max-width:480px"><div class="ph"><h2>Hasil Gambar</h2></div><div id="rvc"></div><div class="row"><button class="btn pri" id="rx">Keluar</button></div></div></div>
 <div id="bd" class="hide"></div>
 
 <script>
 const $=s=>document.querySelector(s)
 const hexRgb=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255]}
+const LN=new Set(['pen','eraser','pencil','ink','marker']),WM={eraser:1.5,marker:1.6},MA={marker:.55},SP={spray:[1.4,.9,14,.85],crayon:[.55,2.4,9,.9],charcoal:[.8,1.8,6,.5]}
 
 let PR=1
 class Stroker{
@@ -226,16 +238,17 @@ begin(p,x,y){
 this.p=p;this.a={x,y};this.m={x,y};this.rem=0;this.d=0
 if(!this.rp){this.pts=[x,y];this.pp=[PR];this.total=null}
 const t=p.tool
-this.useOv=t!=='blur'&&(p.ti>0||p.to>0||!!p.sel)
+this.useOv=t!=='blur'&&(p.ti>0||p.to>0||!!p.sel||!!MA[t])
 this.c=this.useOv?this.ovx:this.main
+this.ovc.style.opacity=this.useOv&&MA[t]||''
 this.er=t==='eraser'&&!this.bg
 const c=this.c,q=this.tf()
 c.globalAlpha=1;c.globalCompositeOperation=this.er&&!this.useOv?'destination-out':'source-over'
-if(t==='pen'||t==='eraser'){c.fillStyle=t==='eraser'?this.ek():p.color;c.beginPath();c.arc(x,y,(t==='eraser'?p.size*1.5:p.size)*q/2,0,7);c.fill()}
+if(t==='pen'||t==='eraser'||t==='ink'||t==='marker'){c.fillStyle=t==='eraser'?this.ek():p.color;c.beginPath();c.arc(x,y,(WM[t]||1)*p.size*q/2,0,7);c.fill()}
 else if(t==='pencil'){c.fillStyle=p.color;c.globalAlpha=.75;c.beginPath();c.arc(x,y,Math.max(.6,p.size*.25)*q,0,7);c.fill();c.globalAlpha=1}
 else if(t==='chisel')this.chisel(x,y,x,y)
-else if(t==='brush')this.stampLine({x,y},{x,y},this.spacing())
-else if(t==='spray')this.spray(x,y)
+else if(t==='brush'||t==='airbrush')this.stampLine({x,y},{x,y},this.spacing())
+else if(SP[t])this.spray(x,y)
 else if(t==='blur')this.blurAt(x,y)
 }
 move(x,y){
@@ -243,7 +256,7 @@ if(!this.a)return
 const a=this.a,b={x,y},t=this.p.tool
 if(!this.rp){this.pts.push(x,y);this.pp.push(PR)}
 this.d+=Math.hypot(x-a.x,y-a.y)
-if(t==='pen'||t==='eraser'||t==='pencil'){const mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2};this.curve(this.m,a,mid);this.m=mid}
+if(LN.has(t)){const mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2};this.curve(this.m,a,mid);this.m=mid}
 else if(t==='chisel')this.chisel(a.x,a.y,b.x,b.y)
 else this.stampLine(a,b,this.spacing())
 this.a=b
@@ -251,7 +264,7 @@ this.a=b
 end(){
 if(!this.a)return
 const t=this.p.tool
-if(t==='pen'||t==='eraser'||t==='pencil')this.curve(this.m,this.a,this.a)
+if(LN.has(t))this.curve(this.m,this.a,this.a)
 this.c.globalAlpha=1;this.c.globalCompositeOperation='source-over';this.a=null;this.m=null
 if(!this.rp)this.fin()
 }
@@ -279,16 +292,16 @@ const g=t.getContext('2d')
 g.drawImage(this.ovc,0,0);g.globalCompositeOperation='destination-in';g.drawImage(this.mask,0,0)
 src=t
 }
-this.main.globalAlpha=1;this.main.globalCompositeOperation=this.er?'destination-out':'source-over';this.main.drawImage(src,0,0);this.main.globalCompositeOperation='source-over'
+this.main.globalAlpha=MA[p.tool]||1;this.main.globalCompositeOperation=this.er?'destination-out':'source-over';this.main.drawImage(src,0,0);this.main.globalCompositeOperation='source-over';this.main.globalAlpha=1;this.ovc.style.opacity=''
 this.ovx.clearRect(0,0,this.w,this.h)
 this.useOv=false;this.c=this.main
 }
-spacing(){const s=this.p.size,t=this.p.tool;return t==='brush'?Math.max(1,s*.14):t==='spray'?Math.max(2,s*.35):Math.max(2,s*.3)}
+spacing(){const s=this.p.size,t=this.p.tool;return t==='brush'||t==='airbrush'?Math.max(1,s*.14):SP[t]?Math.max(2,s*.35):Math.max(2,s*.3)}
 curve(f,k,to){
 const c=this.c,p=this.p,q=this.tf()
 c.lineJoin='round'
-if(p.tool==='pen'||p.tool==='eraser'){
-c.strokeStyle=p.tool==='eraser'?this.ek():p.color;c.lineWidth=(p.tool==='eraser'?p.size*1.5:p.size)*q;c.lineCap='round';c.globalAlpha=1
+if(p.tool!=='pencil'){
+c.strokeStyle=p.tool==='eraser'?this.ek():p.color;c.lineWidth=(WM[p.tool]||1)*p.size*q;c.lineCap='round';c.globalAlpha=1
 c.beginPath();c.moveTo(f.x,f.y);c.quadraticCurveTo(k.x,k.y,to.x,to.y);c.stroke();return
 }
 c.strokeStyle=p.color;c.lineCap='butt';c.lineWidth=Math.max(.5,p.size*.5*q);c.globalAlpha=.7
@@ -310,22 +323,23 @@ let d=this.rem
 while(d<=dist){const k=dist===0?0:d/dist;this.stamp(a.x+dx*k,a.y+dy*k);d+=sp}
 this.rem=d-dist
 }
-stamp(x,y){const t=this.p.tool;if(t==='brush')this.brushStamp(x,y);else if(t==='spray')this.spray(x,y);else if(t==='blur')this.blurAt(x,y)}
+stamp(x,y){const t=this.p.tool;if(t==='brush'||t==='airbrush')this.brushStamp(x,y);else if(SP[t])this.spray(x,y);else if(t==='blur')this.blurAt(x,y)}
 sprite(){
-const r=Math.max(1,Math.round(this.p.size*1.2)),key=this.p.color+'|'+r
+const air=this.p.tool==='airbrush',r=Math.max(1,Math.round(this.p.size*(air?1.6:1.2))),key=this.p.tool+this.p.color+'|'+r
 if(this.sp&&this.sk===key)return this.sp
 const cv=this.sp||document.createElement('canvas')
 cv.width=cv.height=r*2
 const g=cv.getContext('2d'),[R,G,B]=hexRgb(this.p.color),gr=g.createRadialGradient(r,r,0,r,r,r)
-gr.addColorStop(0,`rgba(${R},${G},${B},1)`);gr.addColorStop(.35,`rgba(${R},${G},${B},.7)`);gr.addColorStop(1,`rgba(${R},${G},${B},0)`)
+if(air){gr.addColorStop(0,`rgba(${R},${G},${B},.9)`);gr.addColorStop(.5,`rgba(${R},${G},${B},.3)`)}else{gr.addColorStop(0,`rgba(${R},${G},${B},1)`);gr.addColorStop(.35,`rgba(${R},${G},${B},.7)`)}
+gr.addColorStop(1,`rgba(${R},${G},${B},0)`)
 g.fillStyle=gr;g.fillRect(0,0,cv.width,cv.height)
 this.sp=cv;this.sk=key
 return cv
 }
-brushStamp(x,y){const s=this.sprite(),c=this.c,q=this.tf(),w=s.width*q,h=s.height*q;c.globalAlpha=.22;c.drawImage(s,x-w/2,y-h/2,w,h);c.globalAlpha=1}
+brushStamp(x,y){const s=this.sprite(),c=this.c,q=this.tf(),w=s.width*q,h=s.height*q;c.globalAlpha=this.p.tool==='airbrush'?.09:.22;c.drawImage(s,x-w/2,y-h/2,w,h);c.globalAlpha=1}
 spray(x,y){
-const c=this.c,s=this.p.size,R=s*1.4,n=Math.max(8,Math.round(s*.9)),dot=Math.max(1,s/14)
-c.fillStyle=this.p.color;c.globalAlpha=.85
+const c=this.c,s=this.p.size,[rm,nm,dv,al]=SP[this.p.tool],R=s*rm,n=Math.max(8,Math.round(s*nm)),dot=Math.max(1,s/dv)
+c.fillStyle=this.p.color;c.globalAlpha=al
 for(let i=0;i<n;i++){const an=Math.random()*6.2832,rd=R*Math.sqrt(Math.random());c.fillRect(x+Math.cos(an)*rd,y+Math.sin(an)*rd,dot,dot)}
 c.globalAlpha=1
 }
@@ -456,19 +470,28 @@ image:'<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r=
 eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
 eyeoff:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><path d="m3 3 18 18"/>',
 up:'<path d="m18 15-6-6-6 6"/>',
-down:'<path d="m6 9 6 6 6-6"/>'
+down:'<path d="m6 9 6 6 6-6"/>',
+ink:'<path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.6 7.6"/><circle cx="11" cy="11" r="2"/>',
+marker:'<path d="m14 4 6 6-8.500 8.500-6-6z"/><path d="M5.500 12.500 3 21l8.500-2.500"/>',
+airbrush:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7" stroke-dasharray="1 3"/><circle cx="12" cy="12" r="10" stroke-dasharray="1 5"/>',
+crayon:'<path d="M7 21 3 17 15 5l4 4z"/><path d="m13 7 4 4"/><path d="M3 21h8"/>',
+charcoal:'<path d="m3 21 4-1 13-13a2.800 2.800 0 0 0-4-4L3 16z"/><path d="m13 6 5 5"/><path d="M3 21h.01M7 21h.01M11 21h.01M15 21h.01"/>'
 })
 const ic=n=>'<svg viewBox="0 0 24 24">'+P[n]+'</svg>'
 document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML=ic(e.dataset.i)})
-const TOOLS=[['pen','Pulpen'],['pencil','Pensil'],['brush','Kuas Lembut'],['chisel','Kaligrafi'],['spray','Semprot'],['eraser','Penghapus'],['fill','Ember Cat'],['blur','Blur'],['wand','Tongkat Sihir']]
+const BRUSHES=[['pen','Pulpen'],['ink','Tinta'],['pencil','Pensil'],['marker','Spidol'],['chisel','Kaligrafi'],['brush','Kuas Lembut'],['airbrush','Airbrush'],['crayon','Krayon'],['charcoal','Arang'],['spray','Semprot']]
+const TOOLS=[['eraser','Penghapus'],['fill','Ember Cat'],['blur','Blur'],['wand','Tongkat Sihir']]
+const isBr=t=>BRUSHES.some(b=>b[0]===t)
 const CHUNK=12000
 const r1=n=>Math.round(n*10)/10
 const cv=$('#cv')
-const S={tool:'pen',color:'#111827',size:6,w:800,h:600,link:null,ctx:null,loc:null,stab:0,ti:0,to:0,tol:16,sel:null,sp:{x:0,y:0},raw:{x:0,y:0},rem:null,hist:null,aid:null,buf:[],nt:null,st:null,rx:null,unread:0,duo:false,msgs:0,cfg:null,lay:[],cur:null,nid:1,sz:'800x600'}
-const CK='kanvas-cfg',KEYS=['stab','ti','to','tol','size','color','tool','sz']
+const S={tool:'pen',color:'#111827',size:6,w:800,h:600,link:null,ctx:null,loc:null,stab:0,ti:0,to:0,tol:16,sel:null,sp:{x:0,y:0},raw:{x:0,y:0},rem:null,hist:null,aid:null,buf:[],nt:null,st:null,rx:null,unread:0,duo:false,msgs:0,cfg:null,lay:[],cur:null,nid:1,sz:'800x600',br:'pen'}
+const CK='kanvas-cfg',KEYS=['stab','ti','to','tol','size','color','tool','sz','br']
 try{const o=JSON.parse(localStorage.getItem(CK)||'{}');KEYS.forEach(k=>{if(k in o&&typeof o[k]===typeof S[k])S[k]=o[k]})}catch(x){}
 if(!/^#[0-9a-f]{6}$/i.test(S.color))S.color='#111827'
-if(!['pen','pencil','brush','chisel','spray','eraser','fill','blur','wand'].includes(S.tool))S.tool='pen'
+if(!isBr(S.br))S.br='pen'
+if(!isBr(S.tool)&&!TOOLS.some(t=>t[0]===S.tool))S.tool=S.br
+if(isBr(S.tool))S.br=S.tool
 const saveCfg=()=>{try{localStorage.setItem(CK,JSON.stringify(Object.fromEntries(KEYS.map(k=>[k,S[k]]))))}catch(x){}}
 const show=id=>{['menu','pair','studio'].forEach(s=>$('#'+s).classList.toggle('hide',s!==id))}
 const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hide'),2000)}
@@ -561,15 +584,15 @@ return
 }
 const mc=document.createElement('canvas')
 mc.width=w;mc.height=h
-const mg=mc.getContext('2d'),a=mg.createImageData(w,h),b=sx.createImageData(w,h)
+const mg=mc.getContext('2d'),a=mg.createImageData(w,h),b=new ImageData(w,h),a32=new Uint32Array(a.data.buffer),b32=new Uint32Array(b.data.buffer)
 for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-const p=y*w+x,i=p*4
+const p=y*w+x
 if(!m[p])continue
-a.data[i+3]=255
-const edge=x===0||y===0||x===w-1||y===h-1||!m[p-1]||!m[p+1]||!m[p-w]||!m[p+w]
-b.data[i]=79;b.data[i+1]=70;b.data[i+2]=229;b.data[i+3]=edge?255:60
+a32[p]=0xFF000000
+if(x===0||y===0||x===w-1||y===h-1||!m[p-1]||!m[p+1]||!m[p-w]||!m[p+w])b32[p]=((x+y)>>2)&1?0xFFFFFFFF:0xFF111111
 }
-mg.putImageData(a,0,0);sx.putImageData(b,0,0)
+mg.putImageData(a,0,0)
+const t=tmp(1);t.getContext('2d').putImageData(b,0,0);sx.drawImage(t,0,0);sx.drawImage(t,1,1)
 S.sel={d:m,cv:mc};S.loc.mask=mc
 ov.style.maskImage=ov.style.webkitMaskImage='url('+mc.toDataURL()+')'
 ov.style.maskSize=ov.style.webkitMaskSize='100% 100%'
@@ -681,15 +704,26 @@ show('menu')
 const point=(e,r)=>{const c=Math.cos(V.r),s=Math.sin(V.r),dx=e.clientX-r.left-V.x,dy=e.clientY-r.top-V.y,k=V.k*V.z;return{x:(dx*c+dy*s)/k,y:(dy*c-dx*s)/k}}
 let rect=null,tap=null,gs=null,lt=0,lx=0,ly=0
 const ptr=new Map()
+const growSel=(m,d,w,sx,sy,lim)=>{
+const si=(Math.floor(sy)*w+Math.floor(sx))*4,r=d[si],g=d[si+1],b=d[si+2],n=m.length,o=m.slice()
+for(let p=0;p<n;p++){
+if(m[p])continue
+const x=p%w
+if(!((x>0&&m[p-1])||(x<w-1&&m[p+1])||(p>=w&&m[p-w])||(p<n-w&&m[p+w])))continue
+const i=p*4
+if(Math.abs(d[i]-r)+Math.abs(d[i+1]-g)+Math.abs(d[i+2]-b)<=lim)o[p]=1
+}
+return o
+}
 const tapAct=(x,y)=>{
 const src=flat().getContext('2d')
-if(S.tool==='wand'){setSel(wandMask(src,S.w,S.h,x,y,S.tol*3));return}
+if(S.tool==='wand'){const q={},m=wandMask(src,S.w,S.h,x,y,S.tol*3,q);setSel(m&&growSel(m,q.d,S.w,x,y,Math.min(360,S.tol*3+120)));return}
 const o={},m=wandMask(src,S.w,S.h,x,y,64,o)
 if(!m)return
 const W=S.w,H=S.h,sd=o.d,si=(Math.floor(y)*W+Math.floor(x))*4,sr=sd[si],sg=sd[si+1],sb=sd[si+2]
 const t=tmp(0),g=t.getContext('2d'),img=g.createImageData(W,H),d=img.data,[r,gr,b]=hexRgb(S.color)
 const put=(p,a)=>{const i=p*4;d[i]=r;d[i+1]=gr;d[i+2]=b;d[i+3]=a}
-const wt=p=>{const i=p*4,e=Math.abs(sd[i]-sr)+Math.abs(sd[i+1]-sg)+Math.abs(sd[i+2]-sb);return e>=510?0:Math.round(255*(1-e/510))}
+const wt=p=>{const i=p*4,e=Math.abs(sd[i]-sr)+Math.abs(sd[i+1]-sg)+Math.abs(sd[i+2]-sb);return e>=540?0:e<=300?255:Math.round(255*(540-e)/240)}
 const seen=new Uint8Array(m.length)
 const ex=(q,out)=>{if(m[q]||seen[q])return;seen[q]=1;const a=wt(q);if(a>0){put(q,a);out.push(q)}}
 const grow=(list,out)=>{for(const p of list){const cx=p%W;if(cx>0)ex(p-1,out);if(cx<W-1)ex(p+1,out);if(p>=W)ex(p-W,out);if(p<m.length-W)ex(p+W,out)}}
@@ -726,9 +760,9 @@ $('#mid').addEventListener('pointermove',e=>{
 if(S.aid!==e.pointerId)return
 const tn=performance.now(),spd=Math.hypot(e.clientX-lx,e.clientY-ly)/Math.max(1,tn-lt)
 lt=tn;lx=e.clientX;ly=e.clientY
-const tg=e.pointerType==='pen'&&e.pressure>0?.2+.8*e.pressure:S.tool==='pen'?1-Math.min(.45,spd*.12):1
+const tg=e.pointerType==='pen'&&e.pressure>0?.2+.8*e.pressure:S.tool==='pen'?1-Math.min(.45,spd*.12):S.tool==='ink'?1-Math.min(.7,spd*.18):1
 PR+=(tg-PR)*.3
-const r=point(e,rect),k=S.tool==='pen'?Math.min(kStab(),.6):kStab()
+const r=point(e,rect),k=S.tool==='pen'||S.tool==='ink'?Math.min(kStab(),.6):kStab()
 S.raw=r
 S.sp.x+=(r.x-S.sp.x)*k;S.sp.y+=(r.y-S.sp.y)*k
 addPt(S.sp.x,S.sp.y)
@@ -791,13 +825,43 @@ if(!t||!S.link||!S.link.open)return
 addMsg(true,t);net({t:'chat',m:t});$('#ci').value=''
 }
 
-const tb=$('#tools')
+const tb=$('#tools'),bb=document.createElement('button'),tbs={}
+bb.id='bbtn';bb.setAttribute('aria-label','Kuas');tb.appendChild(bb)
 TOOLS.forEach(([id,label])=>{
 const b=document.createElement('button');b.innerHTML=ic(id);b.title=label;b.setAttribute('aria-label',label)
-if(id===S.tool)b.className='on'
-b.onclick=()=>{S.tool=id;[...tb.children].forEach(x=>x.className='');b.className='on';saveCfg()}
-tb.appendChild(b)
+b.onclick=()=>{S.tool=id;updTb();saveCfg()}
+tb.appendChild(b);tbs[id]=b
 })
+const updTb=()=>{
+const b=BRUSHES.find(x=>x[0]===S.br)||BRUSHES[0]
+bb.innerHTML=ic(b[0])+'<span>'+b[1]+'</span>';bb.className=isBr(S.tool)?'on':''
+for(const id in tbs)tbs[id].className=S.tool===id?'on':''
+}
+const bl=$('#bl'),bpc=$('#bpc'),bpo=document.createElement('canvas')
+bpo.width=bpc.width;bpo.height=bpc.height
+let bpv=null
+const markBl=()=>[...bl.children].forEach(b=>b.classList.toggle('on',b.dataset.t===S.br))
+const pvw=()=>{
+const w=bpc.width,h=bpc.height,g=bpc.getContext('2d'),[r,gg,b]=hexRgb(S.color),o=PR
+g.globalAlpha=1;g.globalCompositeOperation='source-over'
+g.fillStyle=r*.3+gg*.6+b*.1>200?'#334155':'#fff';g.fillRect(0,0,w,h)
+if(!bpv)bpv=new Stroker(g,w,h,'#ffffff',bpo)
+const st=bpv,n=36,p={tool:S.br,color:S.color,size:Math.min(S.size,26),ti:0,to:0,sel:false},pt=i=>[20+(w-40)*i/n,h/2+Math.sin(i/n*6.2832)*h*.2]
+PR=1;st.mask=null;st.rp=false
+st.begin(p,...pt(0))
+for(let i=1;i<=n;i++)st.move(...pt(i))
+st.end()
+PR=o
+$('#bpn').textContent=(BRUSHES.find(x=>x[0]===S.br)||BRUSHES[0])[1]
+}
+BRUSHES.forEach(([id,n])=>{
+const b=document.createElement('button');b.className='bi';b.dataset.t=id;b.innerHTML=ic(id)+'<span>'+n+'</span>'
+b.onclick=()=>{S.br=S.tool=id;updTb();saveCfg();markBl();pvw()}
+bl.appendChild(b)
+})
+bb.onclick=()=>{markBl();pvw();$('#bpd').classList.remove('hide')}
+$('#bpd').onclick=e=>{if(e.target===e.currentTarget||e.target.closest('#bx'))$('#bpd').classList.add('hide')}
+updTb()
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x))
 const hsv2rgb=(h,s,v)=>{const f=n=>{const k=(n+h/60)%6;return v-v*s*Math.max(0,Math.min(k,4-k,1))};return[f(5),f(3),f(1)].map(x=>Math.round(x*255))}
 const rgb2hsv=(r,g,b)=>{
@@ -1019,15 +1083,26 @@ $('#lu').onclick=()=>mv(1)
 $('#lw').onclick=()=>mv(-1)
 
 const rw=$('#rw'),rf=$('#rf')
-let ri=null
+let ri=null,rq=0
+const RV={z:1,x:0,y:0}
 const drawRef=()=>{
 const w=rf.clientWidth,h=rf.clientHeight
-rf.width=w;rf.height=h
+if(rf.width!==w)rf.width=w
+if(rf.height!==h)rf.height=h
 const g=rf.getContext('2d')
+g.clearRect(0,0,w,h)
 if(!ri){g.fillStyle='#94a3b8';g.font='12px system-ui';g.textAlign='center';g.fillText('Ketuk untuk muat gambar',w/2,h/2);return}
-const k=Math.min(w/ri.width,h/ri.height),iw=ri.width*k,ih=ri.height*k
-g.drawImage(ri,(w-iw)/2,(h-ih)/2,iw,ih)
+const k=Math.min(w/ri.width,h/ri.height)*RV.z,iw=ri.width*k,ih=ri.height*k
+RV.x=clamp(RV.x,-(w+iw)/2+30,(w+iw)/2-30);RV.y=clamp(RV.y,-(h+ih)/2+30,(h+ih)/2-30)
+g.drawImage(ri,(w-iw)/2+RV.x,(h-ih)/2+RV.y,iw,ih)
 }
+const qRef=()=>{if(!rq)rq=requestAnimationFrame(()=>{rq=0;drawRef()})}
+const zRef=(px,py,nz)=>{
+nz=clamp(nz,.2,16)
+const f=nz/RV.z,dx=px-rf.clientWidth/2,dy=py-rf.clientHeight/2
+RV.x=dx-(dx-RV.x)*f;RV.y=dy-(dy-RV.y)*f;RV.z=nz;qRef()
+}
+const zStep=f=>{zRef(rf.clientWidth/2,rf.clientHeight/2,RV.z*f);if(Math.abs(RV.z-1)<.12){RV.z=1;RV.x=RV.y=0}}
 $('#rb').onclick=()=>{rw.classList.toggle('hide');if(!rw.classList.contains('hide'))drawRef()}
 $('#rc').onclick=()=>rw.classList.add('hide')
 $('#rl').onclick=()=>$('#rfi').click()
@@ -1036,18 +1111,41 @@ $('#rfi').onchange=e=>{
 const f=e.target.files[0]
 if(!f)return
 const im=new Image(),u=URL.createObjectURL(f)
-im.onload=()=>{ri=im;drawRef();URL.revokeObjectURL(u)}
+im.onload=()=>{ri=im;RV.z=1;RV.x=RV.y=0;drawRef();URL.revokeObjectURL(u)}
 im.src=u
 e.target.value=''
 }
-rf.onpointerdown=rf.onpointermove=e=>{
-if(!ri||!e.buttons)return
+const pickRef=e=>{
+if(!ri)return
 const r=rf.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)*rf.width/r.width),y=Math.floor((e.clientY-r.top)*rf.height/r.height)
 if(x<0||y<0||x>=rf.width||y>=rf.height)return
 const d=rf.getContext('2d').getImageData(x,y,1,1).data
 if(d[3]<255)return
 fromRgb([d[0],d[1],d[2]]);apply()
 }
+const rp=new Map()
+let rg0=null,rtp=null
+rf.onpointerdown=e=>{rf.setPointerCapture(e.pointerId);rp.set(e.pointerId,{x:e.clientX,y:e.clientY});rtp=rp.size===1?{x:e.clientX,y:e.clientY}:null;rg0=null}
+rf.onpointermove=e=>{
+const o=rp.get(e.pointerId)
+if(!o||!ri)return
+if(rp.size===1){
+if(rtp&&Math.hypot(e.clientX-rtp.x,e.clientY-rtp.y)<6)return
+rtp=null;RV.x+=e.clientX-o.x;RV.y+=e.clientY-o.y;o.x=e.clientX;o.y=e.clientY;qRef();return
+}
+o.x=e.clientX;o.y=e.clientY
+const[a,b]=[...rp.values()],r=rf.getBoundingClientRect(),d=Math.hypot(a.x-b.x,a.y-b.y)||1,cx=(a.x+b.x)/2-r.left,cy=(a.y+b.y)/2-r.top
+if(rg0){RV.x+=cx-rg0.x;RV.y+=cy-rg0.y;zRef(cx,cy,RV.z*d/rg0.d)}
+rg0={x:cx,y:cy,d}
+}
+rf.onpointerup=rf.onpointercancel=e=>{
+rp.delete(e.pointerId);rg0=null
+if(rtp&&e.type==='pointerup')pickRef(e)
+rtp=null
+}
+rf.addEventListener('wheel',e=>{e.preventDefault();const r=rf.getBoundingClientRect();zRef(e.clientX-r.left,e.clientY-r.top,RV.z*Math.exp(-e.deltaY*.002))},{passive:false})
+$('#rzo').onclick=()=>zStep(.8)
+$('#rzi').onclick=()=>zStep(1.25)
 const dragIt=(h,f)=>{
 let s=null
 h.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;h.setPointerCapture(e.pointerId);s={x:e.clientX,y:e.clientY,l:rw.offsetLeft,t:rw.offsetTop,w:rw.offsetWidth,h:rw.offsetHeight}})
@@ -1056,7 +1154,7 @@ h.addEventListener('pointerup',()=>{s=null})
 h.addEventListener('pointercancel',()=>{s=null})
 }
 dragIt($('#rh'),(dx,dy,s)=>{rw.style.left=Math.min(innerWidth-60,Math.max(60-s.w,s.l+dx))+'px';rw.style.top=Math.min(innerHeight-40,Math.max(0,s.t+dy))+'px'})
-dragIt($('#rg'),(dx,dy,s)=>{rw.style.width=Math.min(innerWidth-8,Math.max(120,s.w+dx))+'px';rw.style.height=Math.min(innerHeight-8,Math.max(110,s.h+dy))+'px';drawRef()})
+dragIt($('#rg'),(dx,dy,s)=>{rw.style.width=Math.min(innerWidth-8,Math.max(120,s.w+dx))+'px';rw.style.height=Math.min(innerHeight-8,Math.max(110,s.h+dy))+'px';qRef()})
 
 const PF={n:'',img:'',c:Math.floor(Math.random()*6)}
 try{Object.assign(PF,JSON.parse(localStorage.getItem('kanvas-pf')||'{}'))}catch(x){}
@@ -1268,9 +1366,9 @@ document.addEventListener('gesturestart',lock)
 document.addEventListener('gesturechange',lock)
 document.addEventListener('gestureend',lock)
 document.addEventListener('contextmenu',e=>{if(e.target===cv)e.preventDefault()})
-document.addEventListener('touchmove',e=>{if(e.touches.length>1||!e.target.closest('#msgs,#lr,#rvc,textarea,input[type=range]'))e.preventDefault()},{passive:false})
+document.addEventListener('touchmove',e=>{if(e.touches.length>1||!e.target.closest('#msgs,#lr,#rvc,#bl,textarea,input[type=range]'))e.preventDefault()},{passive:false})
 document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})
-document.addEventListener('wheel',e=>{if(e.ctrlKey||!e.target.closest('#msgs,#lr,#rvc,textarea,input[type=range]'))e.preventDefault()},{passive:false})
+document.addEventListener('wheel',e=>{if(e.ctrlKey||!e.target.closest('#msgs,#lr,#rvc,#bl,textarea,input[type=range]'))e.preventDefault()},{passive:false})
 document.addEventListener('dblclick',lock)
 addEventListener('scroll',()=>scrollTo(0,0))
 addEventListener('keydown',e=>{
@@ -1308,10 +1406,10 @@ document.head.appendChild(stl)
 const svg=document.createElementNS(NS,'svg')
 svg.id='rls';cw.appendChild(svg)
 const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e}
-const circ=mk('circle',{fill:'rgba(79,70,229,.06)',stroke:'#4f46e5'})
+const circ=mk('circle',{fill:'none',stroke:'#475569','stroke-opacity':.75})
 const axis=mk('line',{stroke:'#db2777'})
-const hc=mk('circle',{class:'hd',fill:'#fff',stroke:'#4f46e5'})
-const he=mk('circle',{class:'hd',fill:'#4f46e5',stroke:'#fff'})
+const hc=mk('circle',{class:'hd',fill:'#fff',stroke:'#475569'})
+const he=mk('circle',{class:'hd',fill:'#475569',stroke:'#fff'})
 const hm=mk('circle',{class:'hd',fill:'#fff',stroke:'#db2777'})
 const hr=mk('circle',{class:'hd',fill:'#db2777',stroke:'#fff'})
 const ensure=()=>{
@@ -1325,8 +1423,9 @@ const u=1/z(),sw=2*u
 svg.setAttribute('viewBox','0 0 '+S.w+' '+S.h)
 circ.style.display=hc.style.display=he.style.display=R.c?'':'none'
 axis.style.display=hm.style.display=hr.style.display=R.m?'':'none'
+if(!R.c&&!R.m)return
 if(R.c){
-setA(circ,{cx:R.cx,cy:R.cy,r:R.r,'stroke-width':sw,'stroke-dasharray':8*u+' '+6*u})
+setA(circ,{cx:R.cx,cy:R.cy,r:R.r,'stroke-width':1.5*u})
 setA(hc,{cx:R.cx,cy:R.cy,r:14*u,'stroke-width':sw})
 setA(he,{cx:R.cx+R.r*Math.cos(R.ca),cy:R.cy+R.r*Math.sin(R.ca),r:12*u,'stroke-width':sw})
 }
@@ -1426,16 +1525,27 @@ draw()
 </script>
 <script>
 (()=>{
-const gd=document.createElement('div'),cw=$('#cw')
+const gd=document.createElement('div'),cw=$('#cw'),G={on:false,s:50},tg=document.createElement('button'),pd=document.createElement('div')
+let lw=0,lh=0
 gd.id='gd';gd.className='hide'
 cw.appendChild(gd)
 const b=document.createElement('button')
 b.className='ib';b.title='Grid';b.setAttribute('aria-label','Grid')
 b.innerHTML='<svg viewBox="0 0 24 24"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg>'
 $('#cols').appendChild(b)
-const size=()=>{gd.style.backgroundSize=5000/S.w+'% '+5000/S.h+'%'}
-b.onclick=()=>{const on=!gd.classList.toggle('hide');b.classList.toggle('ron',on);size()}
-new MutationObserver(()=>{if(!gd.classList.contains('hide'))size()}).observe(cw,{attributes:true,attributeFilter:['style']})
+const size=()=>{lw=S.w;lh=S.h;gd.style.backgroundSize=G.s*100/S.w+'% '+G.s*100/S.h+'%'}
+const setOn=on=>{G.on=on;gd.classList.toggle('hide',!on);b.classList.toggle('ron',on);tg.textContent=on?'Matikan grid':'Nyalakan grid';tg.className='btn'+(on?'':' pri');if(on)size()}
+pd.id='gpd';pd.className='hide'
+pd.innerHTML='<div class="pn"><div class="ph"><h2>Grid</h2><button class="ib" aria-label="Tutup">'+ic('x')+'</button></div><div id="gr" style="display:flex;flex-direction:column;gap:12px"></div></div>'
+document.body.appendChild(pd)
+const gr=pd.querySelector('#gr')
+mkRow(gr,'Ukuran',200,()=>G.s,v=>{G.s=Math.max(4,v);size()})
+gr.appendChild(tg)
+tg.onclick=()=>setOn(!G.on)
+setOn(false)
+b.onclick=()=>{if(!G.on)setOn(true);pd.classList.remove('hide')}
+pd.onclick=e=>{if(e.target===pd||e.target.closest('.ib'))pd.classList.add('hide')}
+new MutationObserver(()=>{if(G.on&&(S.w!==lw||S.h!==lh))size()}).observe(cw,{attributes:true,attributeFilter:['style']})
 })()
 </script>
 <script>
