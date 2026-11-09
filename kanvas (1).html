@@ -19,6 +19,8 @@ button,select,textarea{font:inherit}
 .btn.pri{background:#4f46e5;border-color:#4f46e5;color:#fff}
 .btn:disabled{opacity:.4}
 select,textarea{width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:10px;background:#fff;color:#0f172a}
+#ucs{display:flex;align-items:center;gap:8px;margin-top:8px}
+#ucs input{flex:1;min-width:0;border:1px solid #e2e8f0;border-radius:10px;padding:10px;font:inherit;background:#fff;color:#0f172a;user-select:text;-webkit-user-select:text}
 textarea{height:96px;resize:none;font:11px monospace;user-select:text;-webkit-user-select:text;touch-action:pan-y;overflow:auto}
 #top,#cols{display:flex;flex-wrap:wrap;align-items:center;gap:0;padding:4px 6px;background:#fff;border-bottom:1px solid #e2e8f0}
 .ib{width:40px;height:40px;flex:none;border:0;border-radius:10px;background:none;color:#475569;cursor:pointer;position:relative}
@@ -156,7 +158,9 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 <option value="800x600" selected>Sedang 800×600</option>
 <option value="1200x800">Besar 1200×800</option>
 <option value="600x900">Potret 600×900</option>
+<option value="custom">Kustom...</option>
 </select>
+<div id="ucs" class="hide"><input id="ucw" type="number" inputmode="numeric" min="100" max="4096" placeholder="Lebar" aria-label="Lebar canvas"><span>×</span><input id="uch" type="number" inputmode="numeric" min="100" max="4096" placeholder="Tinggi" aria-label="Tinggi canvas"></div>
 <select id="dur"><option value="0">Duo: waktu manual</option><option value="5">Duo: 5 menit</option><option value="10" selected>Duo: 10 menit</option><option value="15">Duo: 15 menit</option><option value="30">Duo: 30 menit</option><option value="60">Duo: 60 menit</option></select>
 <button class="btn pri" id="solo">Solo</button>
 <button class="btn" id="opn">Buka Proyek</button>
@@ -599,8 +603,8 @@ $('#wlkx').onclick=()=>wl.classList.add('hide')
 const CHUNK=12000
 const r1=n=>Math.round(n*10)/10
 const cv=$('#cv')
-const S={tool:'pen',color:'#111827',size:6,w:800,h:600,link:null,ctx:null,loc:null,stab:0,ti:0,to:0,tol:16,sel:null,sp:{x:0,y:0},raw:{x:0,y:0},rem:null,hist:null,aid:null,buf:[],nt:null,st:null,rx:null,unread:0,duo:false,msgs:0,cfg:null,lay:[],cur:null,nid:1,sz:'800x600',br:'pen',pc:50,sv:50,at:50,ts:13,td:40,ta:50,op:100}
-const CK='kanvas-cfg',KEYS=['stab','ti','to','tol','size','color','tool','sz','br','pc','sv','at','ts','td','ta','op']
+const S={tool:'pen',color:'#111827',size:6,w:800,h:600,link:null,ctx:null,loc:null,stab:0,ti:0,to:0,tol:16,sel:null,sp:{x:0,y:0},raw:{x:0,y:0},rem:null,hist:null,aid:null,buf:[],nt:null,st:null,rx:null,unread:0,duo:false,msgs:0,cfg:null,lay:[],cur:null,nid:1,sz:'800x600',br:'pen',cw:800,ch:600,pc:50,sv:50,at:50,ts:13,td:40,ta:50,op:100}
+const CK='kanvas-cfg',KEYS=['stab','ti','to','tol','size','color','tool','sz','br','cw','ch','pc','sv','at','ts','td','ta','op']
 try{const o=JSON.parse(localStorage.getItem(CK)||'{}');KEYS.forEach(k=>{if(k in o&&typeof o[k]===typeof S[k])S[k]=o[k]})}catch(x){}
 if(!/^#[0-9a-f]{6}$/i.test(S.color))S.color='#111827'
 if(!isBr(S.br))S.br='pen'
@@ -923,6 +927,7 @@ PR+=(prT(v,spd)-PR)*.3
 const r=point(v,rect),k0=PS[S.tool]?Math.min(kStab(),clamp(.4+spd*.5,.4,.9)):kStab(),k=1-Math.pow(1-k0,dt/16)
 S.raw=r
 S.sp.x+=(r.x-S.sp.x)*k;S.sp.y+=(r.y-S.sp.y)*k
+if(S.stab>0){const dx=r.x-S.sp.x,dy=r.y-S.sp.y,d=Math.hypot(dx,dy),R=S.stab*.3/(V.k*V.z);if(d>R){const f=(d-R)/d;S.sp.x+=dx*f;S.sp.y+=dy*f}}
 addPt(S.sp.x,S.sp.y)
 }
 })
@@ -1158,7 +1163,10 @@ $('#sz').oninput=e=>{S.size=+e.target.value;$('#szv').textContent=S.size;saveCfg
 $('#cbtn').style.background=S.color
 $('#sz').value=S.size;$('#szv').textContent=S.size
 if([...$('#size').options].some(o=>o.value===S.sz))$('#size').value=S.sz
-$('#size').onchange=()=>{S.sz=$('#size').value;saveCfg()}
+const szUi=()=>$('#ucs').classList.toggle('hide',$('#size').value!=='custom')
+$('#ucw').value=S.cw;$('#uch').value=S.ch
+$('#size').onchange=()=>{S.sz=$('#size').value;szUi();saveCfg()}
+szUi()
 $('#sbtn').onclick=()=>{
 const box=$('#sr')
 box.innerHTML=''
@@ -1415,7 +1423,14 @@ const es=new EventSource(NT+'kanvas-'+c+'/sse?since='+(all?'all':Math.floor(Date
 es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')fn(JSON.parse(d.message))}catch(x){}}
 return es
 }
-const sizeVal=()=>$('#size').value.split('x').map(Number)
+const sizeVal=()=>{
+if($('#size').value!=='custom')return $('#size').value.split('x').map(Number)
+const mx=LOW?3e6:6e6,lim=(v,d)=>Math.max(100,Math.min(4096,Math.round(+v)||d))
+let w=lim($('#ucw').value,S.cw),h=lim($('#uch').value,S.ch)
+if(w*h>mx){const f=Math.sqrt(mx/(w*h));w=Math.max(100,Math.floor(w*f));h=Math.max(100,Math.floor(h*f))}
+$('#ucw').value=S.cw=w;$('#uch').value=S.ch=h;saveCfg()
+return[w,h]
+}
 
 let pend=null
 const ps=t=>{$('#ps').textContent=t}
@@ -1485,6 +1500,7 @@ await restore({w:o.w,h:o.h,nid:o.nid,a:o.a,l})
 }
 
 $('#host').onclick=async()=>{
+if($('#size').value==='custom'){const[cw,ch]=sizeVal();if(cw*ch>1500000)return toast('Duo maksimal 1.500.000 piksel')}
 const[w,h]=sizeVal(),link=new Link(),code=randCode(),dur=+$('#dur').value*60,me=prof()
 dropPend()
 pend={link,code}
