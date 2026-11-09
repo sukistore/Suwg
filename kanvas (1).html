@@ -122,6 +122,9 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 .bi.on{background:#eef2ff;border-color:#4f46e5;color:#4f46e5}
 .bg{grid-column:1/3;font-size:11px;font-weight:700;color:#64748b;padding:6px 2px 0}
 #sr{justify-content:flex-start;max-height:60dvh;overflow-y:auto;touch-action:pan-y}
+#man{display:flex;flex-direction:column;gap:10px}
+#man textarea{height:56px}
+#pair .card{max-height:100%;overflow-y:auto}
 </style>
 </head>
 <body>
@@ -158,9 +161,11 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 <h2 id="pt"></h2>
 <p id="p1"></p>
 <div id="code"></div>
-<input id="jin" maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KODE">
+<input id="jin" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KODE">
 <button class="btn pri" id="go">Gabung</button>
 <p id="ps" style="text-align:center"></p>
+<button class="btn hide" id="mb">Gabung manual (tanpa server)</button>
+<div id="man" class="hide"><textarea id="mo" readonly></textarea><button class="btn" id="mc">Salin kode</button><textarea id="mi"></textarea><button class="btn pri" id="mg">Hubungkan</button></div>
 <button class="btn" id="back">Kembali</button>
 </div>
 </div>
@@ -211,7 +216,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 <div id="sr"></div>
 </div>
 </div>
-<div id="bpd" class="hide"><div class="pn"><div class="ph"><h2>Kuas</h2><button class="ib" id="bx" data-i="x" aria-label="Tutup"></button></div><div id="bpv"><canvas id="bpc" width="360" height="72"></canvas></div><div id="bpn"></div><div id="bl"></div></div></div>
+<div id="bpd" class="hide"><div class="pn"><div class="ph"><h2>Kuas</h2><button class="ib" id="bx" data-i="x" aria-label="Tutup"></button></div><div id="bpv"><canvas id="bpc" width="360" height="72"></canvas></div><div id="bpn"></div><div id="bor"></div><div id="bl"></div></div></div>
 <div id="lpd" class="hide"><div class="pn"><div class="ph"><h2>Layer</h2><button class="ib" id="lx" data-i="x" aria-label="Tutup"></button></div><div id="lr"></div><button class="btn" id="lg">Galeri</button><input type="file" id="lgf" accept="image/*" class="hide"><div class="row" style="justify-content:space-between"><button class="btn" id="la">+ Tambah</button><button class="btn" id="ld">Hapus</button><button class="ib" id="lu" data-i="up" aria-label="Naik"></button><button class="ib" id="lw" data-i="down" aria-label="Turun"></button></div></div></div>
 <div id="rw" class="hide"><div id="rh"><span>Referensi</span><button class="ib" id="rzo" data-i="minus" aria-label="Perkecil"></button><button class="ib" id="rzi" data-i="plus" aria-label="Perbesar"></button><button class="ib" id="rl" data-i="image" aria-label="Muat gambar"></button><button class="ib" id="rc" data-i="x" aria-label="Tutup"></button></div><canvas id="rf"></canvas><div id="rg"></div><input type="file" id="rfi" accept="image/*" class="hide"></div>
 <div id="rv" class="hide"><div class="pn" style="max-width:480px"><div class="ph"><h2>Hasil Gambar</h2></div><div id="rvc"></div><div class="row"><button class="btn pri" id="rx">Keluar</button></div></div></div>
@@ -223,6 +228,7 @@ const hexRgb=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255
 const LOW=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=3,LF=LOW?1.4:1
 const LN=new Set(['pen','eraser','pencil','ink','marker','fine','tech','ball','gpen','brushpen','hb','b2','mech','hair','hairf','tone']),WM={eraser:1.5,marker:1.6,fine:.55,tech:.4,ball:.5,brushpen:1.3,tone:1.4},MA={marker:.55},SP={spray:[1.4,.9,14,.85],crayon:[.55,2.4,9,.9],charcoal:[.8,1.8,6,.5],colorp:[.45,2,8,.55],sketch:[1.1,2.4,10,.2]},PN={pencil:[.5,.7,.22,.3,.35],hb:[.32,.5,.14,.22,.22],b2:[.62,.8,.3,.4,.5],mech:[.22,.85,.06,.2,.15]},PD=[1,0,0],PS={pen:[1,.45,.12],ink:[1,.7,.18],gpen:[1,.55,.14],brushpen:[1,.8,.22],fine:[0,0,0],tech:[0,0,0],ball:[.3,.12,.05],hair:[1,.35,.1],hairf:[1,.3,.1],tone:[0,0,0]},TP={ink:[0,18],gpen:[0,14],brushpen:[6,40],hair:[8,34],hairf:[8,34]},HR={hair:[.9,.07,.45,.85],hairf:[.7,.04,.9,.75]}
 const TN={k:'',p:null}
+const GB=[0,0,0,0],gbR=()=>{GB[0]=GB[1]=1e9;GB[2]=GB[3]=-1e9},gbA=(x,y,m)=>{if(x-m<GB[0])GB[0]=x-m;if(y-m<GB[1])GB[1]=y-m;if(x+m>GB[2])GB[2]=x+m;if(y+m>GB[3])GB[3]=y+m}
 const tonePat=(ctx,col)=>{
 const s=Math.round(4+S.ts*.3),d=Math.min(95,Math.max(5,S.td))/100,a=Math.round(S.ta*.9),k=col+'|'+s+'|'+d+'|'+a
 if(TN.k===k)return TN.p
@@ -258,12 +264,12 @@ if(p.to>0&&this.total!==null)k=Math.min(k,(this.total-this.d)/p.to)
 return (.06+.94*Math.sin(Math.max(0,Math.min(1,k))*1.5708))*PR
 }
 begin(p,x,y){
-this.p=p;this.a={x,y};this.m={x,y};this.rem=0;this.d=0;this.bb=[x,y,x,y]
+this.p=p;this.a={x,y};this.m={x,y};this.rem=0;this.d=0;this.bb=[x,y,x,y];gbA(x,y,p.size*3+8)
 if(!this.rp){this.pts=[x,y];this.pp=[PR];this.total=null}
 const t=p.tool
-this.useOv=t!=='blur'&&(p.ti>0||p.to>0||!!p.sel||!!MA[t])
+this.useOv=t!=='blur'&&(p.ti>0||p.to>0||!!p.sel||!!MA[t]||p.op<1)
 this.c=this.useOv?this.ovx:this.main
-this.ovc.style.opacity=this.useOv&&MA[t]||''
+this.ovc.style.opacity=this.useOv&&(MA[t]||1)*(p.op||1)<1?(MA[t]||1)*(p.op||1):''
 this.tn=t==='tone'?tonePat(this.c,p.color):null
 if(HR[t]){const h=HR[t];this.hn=Math.min(16,Math.max(3,Math.round(p.size*h[2]/LF)));this.ho=Array.from({length:this.hn},(_,i)=>(i*.618034%1-.5)*2)}
 this.er=t==='eraser'&&!this.bg
@@ -283,6 +289,7 @@ if(x<bb[0])bb[0]=x
 if(y<bb[1])bb[1]=y
 if(x>bb[2])bb[2]=x
 if(y>bb[3])bb[3]=y
+gbA(x,y,this.p.size*3+8)
 if(!this.rp){this.pts.push(x,y);this.pp.push(PR)}
 this.d+=Math.hypot(x-a.x,y-a.y)
 if(LN.has(t)){const mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2};this.curve(this.m,a,mid);this.m=mid}
@@ -321,7 +328,7 @@ if(t.width!==this.w||t.height!==this.h){t.width=this.w;t.height=this.h}
 g.globalCompositeOperation='source-over';g.clearRect(rx,ry,rw,rh);g.drawImage(this.ovc,rx,ry,rw,rh,rx,ry,rw,rh);g.globalCompositeOperation='destination-in';g.drawImage(this.mask,rx,ry,rw,rh,rx,ry,rw,rh);g.globalCompositeOperation='source-over'
 src=t
 }
-this.main.globalAlpha=MA[p.tool]||1;this.main.globalCompositeOperation=this.er?'destination-out':'source-over';if(rw>0&&rh>0)this.main.drawImage(src,rx,ry,rw,rh,rx,ry,rw,rh);this.main.globalCompositeOperation='source-over';this.main.globalAlpha=1;this.ovc.style.opacity=''
+this.main.globalAlpha=(MA[p.tool]||1)*(p.op||1);this.main.globalCompositeOperation=this.er?'destination-out':'source-over';if(rw>0&&rh>0)this.main.drawImage(src,rx,ry,rw,rh,rx,ry,rw,rh);this.main.globalCompositeOperation='source-over';this.main.globalAlpha=1;this.ovc.style.opacity=''
 this.ovx.clearRect(0,0,this.w,this.h)
 this.useOv=false;this.c=this.main
 }
@@ -433,21 +440,52 @@ ctx.putImageData(img,0,0)
 }
 
 class History{
-constructor(w,h){this.w=w;this.h=h;this.past=[];this.fut=[];this.max=Math.max(5,Math.min(12,Math.floor(1.6e7/(w*h*4))))}
-st(id){
-const pv=this.past[this.past.length-1]
-return{a:S.cur.id,l:S.lay.map(y=>{if(y.ref)return{id:y.id,n:y.n,v:y.v,ref:y};const o=pv&&pv.l.find(z=>z.id===y.id);return{id:y.id,n:y.n,v:y.v,bg:y.bg,op:y.op,img:o&&id!=='*'&&y.id!==id?o.img:y.ctx.getImageData(0,0,this.w,this.h)}})}
+constructor(w,h){this.w=w;this.h=h;this.past=[];this.fut=[];this.max=LOW?30:60;this.bud=(LOW?24:40)*1048576;this.tot=0;this.nb=0;this.nx=Math.ceil(w/64);this.ny=Math.ceil(h/64)}
+grab(y,pv,r){
+const nx=this.nx,ny=this.ny,t=pv?pv.slice():new Array(nx*ny),cl=(v,m)=>Math.min(m,Math.max(0,v>>6)),x0=r?cl(r[0],nx-1):0,y0=r?cl(r[1],ny-1):0,x1=r?cl(r[2],nx-1):nx-1,y1=r?cl(r[3],ny-1):ny-1
+for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++){
+const w=Math.min(64,this.w-tx*64),h=Math.min(64,this.h-ty*64)
+t[ty*nx+tx]=y.ctx.getImageData(tx*64,ty*64,w,h);this.nb+=w*h*4
 }
-snap(id){this.fut=[];this.past.push(this.st(id));if(this.past.length>this.max)this.past.shift()}
-img(id){const s=this.past[this.past.length-1],e=s&&s.l.find(z=>z.id===id);return e&&e.img}
+return t
+}
+st(id,r){
+const pv=this.past[this.past.length-1];this.nb=0
+const l=S.lay.map(y=>{
+if(y.ref)return{id:y.id,n:y.n,v:y.v,ref:y}
+const o=pv&&pv.l.find(z=>z.id===y.id)
+return{id:y.id,n:y.n,v:y.v,bg:y.bg,op:y.op,tl:!o||!o.tl||id==='*'?this.grab(y):y.id===id?this.grab(y,o.tl,r):o.tl}
+})
+return{a:S.cur.id,l,b:this.nb}
+}
+snap(id,r){
+this.fut=[]
+const s=this.st(id,r)
+this.past.push(s);this.tot+=s.b
+while(this.past.length>2&&(this.past.length>this.max||this.tot>this.bud))this.tot-=this.past.shift().b
+}
+img(id){
+const s=this.past[this.past.length-1],e=s&&s.l.find(z=>z.id===id)
+if(!e||!e.tl)return
+const im=new ImageData(this.w,this.h),nx=this.nx
+e.tl.forEach((t,i)=>{if(!t)return;const ox=(i%nx)*64,oy=((i/nx)|0)*64;for(let r=0;r<t.height;r++)im.data.set(t.data.subarray(r*t.width*4,(r+1)*t.width*4),((oy+r)*this.w+ox)*4)})
+return im
+}
 go(s){
-const old=new Map(S.lay.map(y=>[y.id,y]))
-S.lay=s.l.map(e=>{if(e.ref){e.ref.n=e.n;e.ref.v=e.v;return e.ref}const y=old.get(e.id)||mkLayer(e.id,e.n,e.bg);y.n=e.n;y.v=e.v;y.op=e.op;y.cv.style.opacity=y.op/100;y.ctx.putImageData(e.img,0,0);return y})
+const old=new Map(S.lay.map(y=>[y.id,y])),nx=this.nx
+S.lay=s.l.map(e=>{if(e.ref){e.ref.n=e.n;e.ref.v=e.v;return e.ref}const y=old.get(e.id)||mkLayer(e.id,e.n,e.bg);y.n=e.n;y.v=e.v;y.op=e.op;y.cv.style.opacity=y.op/100;e.tl.forEach((t,i)=>{if(t)y.ctx.putImageData(t,(i%nx)*64,((i/nx)|0)*64)});return y})
 if(!S.lay.includes(S.cur))S.cur=S.lay.find(y=>y.id===s.a)||S.lay[S.lay.length-1]
 relayer()
 }
-undo(){if(this.past.length<2)return false;this.fut.push(this.past.pop());this.go(this.past[this.past.length-1]);return true}
-redo(){const s=this.fut.pop();if(!s)return false;this.past.push(s);this.go(s);return true}
+undo(){if(this.past.length<2)return false;const p=this.past.pop();this.tot-=p.b;this.fut.push(p);this.go(this.past[this.past.length-1]);return true}
+redo(){const s=this.fut.pop();if(!s)return false;this.past.push(s);this.tot+=s.b;this.go(s);return true}
+drop(id){
+const p=this.past[this.past.length-1],q=this.past[this.past.length-2],y=S.lay.find(z=>z.id===id),a=p&&p.l.find(z=>z.id===id),b=q&&q.l.find(z=>z.id===id),nx=this.nx
+if(!y||y.ref||!a||!b||!a.tl||!b.tl)return false
+this.past.pop();this.tot-=p.b
+a.tl.forEach((t,i)=>{if(t!==b.tl[i])y.ctx.putImageData(b.tl[i],(i%nx)*64,((i/nx)|0)*64)})
+return true
+}
 get canUndo(){return this.past.length>1}
 get canRedo(){return this.fut.length>0}
 }
@@ -462,30 +500,40 @@ if(s[0]==='Z')u=await pipe(DecompressionStream,u)
 return JSON.parse(new TextDecoder().decode(u))
 }
 
+const ICE=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun.cloudflare.com:3478','stun:global.stun.twilio.com:3478']},{urls:['turn:openrelay.metered.ca:80','turn:openrelay.metered.ca:443','turn:openrelay.metered.ca:443?transport=tcp','turns:openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}]
 class Link{
 constructor(){this.pc=null;this.dc=null;this.on={}}
 peer(){
-const pc=this.pc=new RTCPeerConnection({iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:['turn:openrelay.metered.ca:80','turn:openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}]})
-pc.onconnectionstatechange=()=>{if(pc.connectionState==='failed'||pc.connectionState==='closed')this.on.close&&this.on.close()}
+const pc=this.pc=new RTCPeerConnection({iceServers:ICE})
+pc.onconnectionstatechange=()=>{const c=pc.connectionState;if(c==='failed'||c==='closed')this.on.close&&this.on.close();else this.on.state&&this.on.state(c)}
 return pc
 }
 chan(dc){
 this.dc=dc
-dc.onopen=()=>this.on.open&&this.on.open()
-dc.onclose=()=>this.on.close&&this.on.close()
+dc.onopen=()=>{clearInterval(this.ka);this.ka=setInterval(()=>this.send({t:'p'}),8000);this.on.open&&this.on.open()}
+dc.onclose=()=>{clearInterval(this.ka);this.on.close&&this.on.close()}
 dc.onmessage=e=>{try{this.on.data&&this.on.data(JSON.parse(e.data))}catch(x){}}
 }
 async ice(){
 const pc=this.pc
-if(pc.iceGatheringState!=='complete')await new Promise(res=>{const t=setTimeout(res,5000);pc.onicegatheringstatechange=()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);res()}}})
-return pack(pc.localDescription.toJSON())
+if(pc.iceGatheringState!=='complete')await new Promise(res=>{
+let t2
+const t=setTimeout(done,8000)
+function done(){clearTimeout(t);clearTimeout(t2);res()}
+pc.onicecandidate=e=>{if(!e.candidate)return done();if(e.candidate.type==='relay'&&!t2)t2=setTimeout(done,1200)}
+pc.onicegatheringstatechange=()=>{if(pc.iceGatheringState==='complete')done()}
+})
+const d=pc.localDescription.toJSON()
+let s=await pack(d)
+if(s.length>3600){d.sdp=d.sdp.split('\r\n').filter(l=>!/^a=candidate:.* typ host/.test(l)).join('\r\n');s=await pack(d)}
+return s
 }
 async offer(){const pc=this.peer();this.chan(pc.createDataChannel('d'));await pc.setLocalDescription(await pc.createOffer());return this.ice()}
 async answerTo(code){const pc=this.peer();pc.ondatachannel=e=>this.chan(e.channel);await pc.setRemoteDescription(await unpack(code));await pc.setLocalDescription(await pc.createAnswer());return this.ice()}
 async accept(code){await this.pc.setRemoteDescription(await unpack(code))}
 send(o){if(this.dc&&this.dc.readyState==='open')try{this.dc.send(JSON.stringify(o))}catch(x){}}
 get open(){return !!this.dc&&this.dc.readyState==='open'}
-close(){this.on={};try{this.dc&&this.dc.close()}catch(x){}try{this.pc&&this.pc.close()}catch(x){}this.dc=this.pc=null}
+close(){clearInterval(this.ka);this.on={};try{this.dc&&this.dc.close()}catch(x){}try{this.pc&&this.pc.close()}catch(x){}this.dc=this.pc=null}
 }
 
 const P={
@@ -536,8 +584,8 @@ const isBr=t=>BRUSHES.some(b=>b[0]===t)
 const CHUNK=12000
 const r1=n=>Math.round(n*10)/10
 const cv=$('#cv')
-const S={tool:'pen',color:'#111827',size:6,w:800,h:600,link:null,ctx:null,loc:null,stab:0,ti:0,to:0,tol:16,sel:null,sp:{x:0,y:0},raw:{x:0,y:0},rem:null,hist:null,aid:null,buf:[],nt:null,st:null,rx:null,unread:0,duo:false,msgs:0,cfg:null,lay:[],cur:null,nid:1,sz:'800x600',br:'pen',pc:50,sv:50,at:50,ts:13,td:40,ta:50}
-const CK='kanvas-cfg',KEYS=['stab','ti','to','tol','size','color','tool','sz','br','pc','sv','at','ts','td','ta']
+const S={tool:'pen',color:'#111827',size:6,w:800,h:600,link:null,ctx:null,loc:null,stab:0,ti:0,to:0,tol:16,sel:null,sp:{x:0,y:0},raw:{x:0,y:0},rem:null,hist:null,aid:null,buf:[],nt:null,st:null,rx:null,unread:0,duo:false,msgs:0,cfg:null,lay:[],cur:null,nid:1,sz:'800x600',br:'pen',pc:50,sv:50,at:50,ts:13,td:40,ta:50,op:100}
+const CK='kanvas-cfg',KEYS=['stab','ti','to','tol','size','color','tool','sz','br','pc','sv','at','ts','td','ta','op']
 try{const o=JSON.parse(localStorage.getItem(CK)||'{}');KEYS.forEach(k=>{if(k in o&&typeof o[k]===typeof S[k])S[k]=o[k]})}catch(x){}
 if(!/^#[0-9a-f]{6}$/i.test(S.color))S.color='#111827'
 if(!isBr(S.br))S.br='pen'
@@ -576,8 +624,8 @@ applyV()
 const refresh=()=>{$('#undo').disabled=!S.hist.canUndo;$('#redo').disabled=!S.hist.canRedo}
 const tmps=[]
 const tmp=i=>{const c=tmps[i]||(tmps[i]=document.createElement('canvas'));c.width=S.w;c.height=S.h;return c}
-const hs=id=>{S.hist.snap(id);refresh();markDirty(id);queueSave()}
-const hd=()=>hs(S.cur.id)
+const hs=(id,r)=>{S.hist.snap(id,r);refresh();markDirty(id);queueSave()}
+const hd=r=>hs(S.cur.id,r)
 const AS={t:0,p:false,all:false,dirty:new Set}
 const markDirty=id=>{if(id==='*')AS.all=true;else if(id!==undefined)AS.dirty.add(id)}
 const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('kanvas-db',1);r.onupgradeneeded=()=>r.result.createObjectStore('p');r.onsuccess=()=>ok(r.result);r.onerror=()=>no()})
@@ -704,7 +752,7 @@ ag.putImageData(S.hist.img(S.cur.id),0,0)
 bg.drawImage(S.cur.cv,0,0);bg.globalCompositeOperation='destination-in';bg.drawImage(S.sel.cv,0,0)
 ag.drawImage(b,0,0);S.ctx.globalCompositeOperation='copy';S.ctx.drawImage(a,0,0);S.ctx.globalCompositeOperation='source-over'
 }
-hd()
+hd(GB[2]>=GB[0]?GB:null)
 if(!live)queueSync()
 }
 S.aid=null
@@ -751,7 +799,7 @@ clearInterval(S.tmr)
 if(S.duo){S.tmr=setInterval(tick,500);tick()}
 setSt(S.duo?'Terhubung':'',true)
 if(link){
-link.on={data:onData,close:()=>{setSt('Koneksi terputus',false);S.rem.end()}}
+link.on={data:onData,state:c=>setSt(c==='connected'?'Terhubung':c==='disconnected'?'Koneksi tidak stabil...':'Menghubungkan...',c==='connected'),close:()=>{setSt('Koneksi terputus',false);S.rem.end()}}
 }
 show('studio');fit()
 }
@@ -793,7 +841,7 @@ for(let p=0;p<m.length;p++)if(m[p]){put(p,255);const cx=p%W;if(cx===0||cx===W-1|
 const l1=[];grow(l0,l1);grow(l1,[])
 g.putImageData(img,0,0)
 if(S.sel){g.globalCompositeOperation='destination-in';g.drawImage(S.sel.cv,0,0)}
-S.ctx.globalAlpha=1;S.ctx.drawImage(t,0,0)
+S.ctx.globalAlpha=Math.max(5,S.op)/100;S.ctx.drawImage(t,0,0);S.ctx.globalAlpha=1
 hd()
 
 }
@@ -827,7 +875,7 @@ const d=g.getImageData(0,0,bw,bh).data,m=new Uint8Array(S.w*S.h)
 for(let y=0;y<bh;y++)for(let x=0;x<bw;x++)if(d[(y*bw+x)*4+3]>127)m[(y+y0)*S.w+x+x0]=1
 setSel(m)
 }
-const abort=()=>{if(S.ls){lsEnd(1);S.aid=null;return}finish();doUndo();S.hist.fut=[]}
+const abort=()=>{if(S.ls){lsEnd(1);S.aid=null;return}const h=S.hist,f=h.fut,t=h.past[h.past.length-1];finish();if(h.past[h.past.length-1]===t||!h.drop(S.cur.id))doUndo();else refresh();h.fut=f}
 $('#mid').addEventListener('pointerdown',e=>{
 if(e.target.closest('#selbar,#chat')||S.over||S.aid!==null||tap||(e.pointerType==='touch'&&!e.isPrimary)||(e.pointerType==='mouse'&&e.button!==0))return
 if(S.cur.ref)return toast('Layer galeri hanya referensi')
@@ -845,8 +893,8 @@ S.sp={x,y};S.raw={x,y}
 lt=performance.now();lx=e.clientX;ly=e.clientY
 PR=prT(e,0)
 S.loc.mask=S.sel?S.sel.cv:null
-const tp=taper(S.tool),p={tool:S.tool,color:S.color,size:S.size,ti:tp[0],to:tp[1],sel:!!S.sel}
-S.loc.begin(p,x,y)
+const tp=taper(S.tool),p={tool:S.tool,color:S.color,size:S.size,ti:tp[0],to:tp[1],sel:!!S.sel,op:Math.max(5,S.op)/100}
+gbR();S.loc.begin(p,x,y)
 })
 $('#mid').addEventListener('pointermove',e=>{
 if(S.aid!==e.pointerId)return
@@ -882,7 +930,7 @@ mid.addEventListener('pointerdown',e=>{
 if(e.target.closest('#selbar,#chat'))return
 if(e.pointerType==='touch'){
 if(e.isPrimary){ptr.clear();gs=null}
-ptr.set(e.pointerId,{x:e.clientX,y:e.clientY})
+ptr.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY})
 if(ptr.size===2){tap=null;if(S.aid!==null)abort();const g=gc();gs={x:g.x,y:g.y,d:g.d,a:g.a,r:V.r,z:V.z,vx:V.x,vy:V.y}}
 }else if(e.pointerType==='mouse'&&e.button!==0){mid.setPointerCapture(e.pointerId);gs={m:1,x:e.clientX,y:e.clientY,vx:V.x,vy:V.y}}
 })
@@ -890,7 +938,8 @@ mid.addEventListener('pointermove',e=>{
 if(!gs)return
 if(gs.m){V.x=gs.vx+e.clientX-gs.x;V.y=gs.vy+e.clientY-gs.y;applyV();return}
 if(!ptr.has(e.pointerId))return
-ptr.set(e.pointerId,{x:e.clientX,y:e.clientY})
+const o=ptr.get(e.pointerId)
+o.x=e.clientX;o.y=e.clientY
 if(ptr.size<2)return
 const g=gc(),r=mid.getBoundingClientRect(),z=Math.min(24,Math.max(.3,gs.z*g.d/gs.d)),dx=gs.x-r.left-gs.vx,dy=gs.y-r.top-gs.vy,c0=Math.cos(gs.r),s0=Math.sin(gs.r),wx=(dx*c0+dy*s0)/gs.z,wy=(dy*c0-dx*s0)/gs.z
 V.r=gs.r+g.a-gs.a
@@ -904,10 +953,8 @@ mid.addEventListener('pointercancel',mup)
 mid.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,V.z*Math.exp(-e.deltaY*.0015))},{passive:false})
 $('#zr').onclick=fit
 
-const doUndo=()=>{if(S.hist.undo()){refresh();queueSync();AS.all=true;queueSave()}}
-const doRedo=()=>{if(S.hist.redo()){refresh();queueSync();AS.all=true;queueSave()}}
-$('#undo').onclick=doUndo
-$('#redo').onclick=doRedo
+const doUndo=()=>{if(S.hist.undo()){refresh();queueSync();AS.all=true;queueSave();return true}return false}
+const doRedo=()=>{if(S.hist.redo()){refresh();queueSync();AS.all=true;queueSave();return true}return false}
 $('#clr').onclick=()=>dialog('Hapus semua?','Seluruh gambar akan dihapus.',[['Batal'],['Hapus',()=>{S.lay.forEach(y=>{if(y.ref)return;y.ctx.globalAlpha=1;if(y.bg){y.ctx.fillStyle='#fff';y.ctx.fillRect(0,0,S.w,S.h)}else y.ctx.clearRect(0,0,S.w,S.h)});hs('*')},1]])
 const dlFlat=(t,q,x,tr)=>flat(1,tr).toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kanvas-'+Date.now()+'.'+x;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},t,q)
 $('#dl').onclick=()=>dialog('Unduh gambar','Pilih format',[['Batal'],['JPG',()=>dlFlat('image/jpeg',.92,'jpg')],['Transparan',()=>dlFlat('image/png',undefined,'png',1)],['PNG',()=>dlFlat('image/png',undefined,'png'),1],['Proyek',()=>saveProj()]])
@@ -941,7 +988,7 @@ const w=bpc.width,h=bpc.height,g=bpc.getContext('2d'),[r,gg,b]=hexRgb(S.color),o
 g.globalAlpha=1;g.globalCompositeOperation='source-over'
 g.fillStyle=r*.3+gg*.6+b*.1>200?'#334155':'#fff';g.fillRect(0,0,w,h)
 if(!bpv)bpv=new Stroker(g,w,h,'#ffffff',bpo)
-const st=bpv,n=36,sz=Math.min(S.size,26),a=PS[S.br]||PD,f=S.at/50*Math.max(1,sz/6),tp=TP[S.br]||[0,0],p={tool:S.br,color:S.color,size:sz,ti:tp[0]*f,to:tp[1]*f,sel:false},pt=i=>[20+(w-40)*i/n,h/2+Math.sin(i/n*6.2832)*h*.2]
+const st=bpv,n=36,sz=Math.min(S.size,26),a=PS[S.br]||PD,f=S.at/50*Math.max(1,sz/6),tp=TP[S.br]||[0,0],p={tool:S.br,color:S.color,size:sz,ti:tp[0]*f,to:tp[1]*f,sel:false,op:Math.max(5,S.op)/100},pt=i=>[20+(w-40)*i/n,h/2+Math.sin(i/n*6.2832)*h*.2]
 PR=a[0]>0?.35:1;st.mask=null;st.rp=false
 st.begin(p,...pt(0))
 for(let i=1;i<=n;i++){PR=a[0]>0?.35+.65*Math.sin(i/n*Math.PI):1;st.move(...pt(i))}
@@ -1013,12 +1060,15 @@ paint();sync()
 }
 const fromRgb=a=>{const[h,s,v]=rgb2hsv(...a);if(s>0&&v>0)C.h=h;if(v>0)C.s=s;C.v=v}
 const setVal=(i,v)=>{const a=C.rgb.slice();a[i]=v;fromRgb(a);apply()}
-const hold=(btn,f)=>{
+const hold=(btn,f,ms)=>{
 let t,iv
 const stop=()=>{clearTimeout(t);clearInterval(iv)}
-btn.onpointerdown=e=>{e.preventDefault();f();t=setTimeout(()=>{iv=setInterval(f,70)},350)}
+btn.onpointerdown=e=>{e.preventDefault();f();t=setTimeout(()=>{iv=setInterval(()=>{if(f()===false)stop()},ms||70)},350)}
 btn.onpointerup=btn.onpointerleave=btn.onpointercancel=stop
 }
+hold($('#undo'),doUndo,160)
+hold($('#redo'),doRedo,160)
+$('#undo').oncontextmenu=$('#redo').oncontextmenu=e=>e.preventDefault()
 const mkRow=(box,label,mx,get,set,trk)=>{
 const r=document.createElement('div')
 r.className='rw'
@@ -1096,6 +1146,7 @@ $('#size').onchange=()=>{S.sz=$('#size').value;saveCfg()}
 $('#sbtn').onclick=()=>{
 const box=$('#sr')
 box.innerHTML=''
+;mkRow($('#bor'),'Opasitas',100,()=>S.op,v=>{S.op=Math.max(5,v);saveCfg();pvw()})
 ;[['Stabilisator','stab'],['Awal kuas','ti'],['Akhir kuas','to'],['Kurva tekanan','pc'],['Peka kecepatan','sv'],['Taper otomatis','at'],['Jarak titik','ts'],['Kepadatan tone','td'],['Sudut tone','ta'],['Toleransi sihir','tol']].forEach(([l,k])=>mkRow(box,l,100,()=>S[k],v=>{S[k]=v;saveCfg()}))
 $('#spd').classList.remove('hide')
 }
@@ -1324,7 +1375,7 @@ finish()
 $('#tm').textContent='Selesai';$('#tm').style.color=''
 S.hist.past=[];S.hist.fut=[];refresh()
 const m=S.mine=flat(1),u=m.toDataURL('image/jpeg',.88)
-if(S.link&&S.link.open){const id=Date.now(),n=Math.ceil(u.length/CHUNK);for(let i=0;i<n;i++)S.link.send({t:'fin',id,n,i,d:u.slice(i*CHUNK,(i+1)*CHUNK)})}
+if(S.link&&S.link.open)(async()=>{const id=Date.now(),n=Math.ceil(u.length/CHUNK);for(let i=0;i<n;i++){while(S.link&&S.link.dc&&S.link.dc.bufferedAmount>262144)await new Promise(r=>setTimeout(r,30));if(!S.link)return;S.link.send({t:'fin',id,n,i,d:u.slice(i*CHUNK,(i+1)*CHUNK)})}})()
 $('#rv').classList.remove('hide')
 renderRv()
 m.toBlob(b=>{if(S.mine!==m||!b)return;S.mineUrl=URL.createObjectURL(b);renderRv()},'image/png')
@@ -1333,10 +1384,18 @@ $('#rx').onclick=exitStudio
 
 const NT='https:' +'/'+'/ntfy.sh/'
 const ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-const randCode=()=>Array.from({length:5},()=>ALPHA[Math.floor(Math.random()*ALPHA.length)]).join('')
-const sigPost=(c,o)=>fetch(NT+'kanvas-'+c,{method:'POST',body:JSON.stringify(o)})
+const randCode=()=>Array.from({length:6},()=>ALPHA[Math.floor(Math.random()*ALPHA.length)]).join('')
+const sigPost=async(c,o)=>{
+const b=JSON.stringify(o)
+if(b.length>3900)throw new Error('big')
+for(let i=0;i<3;i++){
+try{const r=await fetch(NT+'kanvas-'+c,{method:'POST',body:b});if(r.ok)return;if(r.status<500&&r.status!==429)break}catch(x){}
+await new Promise(r=>setTimeout(r,800*(i+1)))
+}
+throw new Error('sig')
+}
 const sigListen=(c,all,fn)=>{
-const es=new EventSource(NT+'kanvas-'+c+'/sse'+(all?'?since=all':''))
+const es=new EventSource(NT+'kanvas-'+c+'/sse?since='+(all?'all':Math.floor(Date.now()/1000)-3))
 es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')fn(JSON.parse(d.message))}catch(x){}}
 return es
 }
@@ -1344,8 +1403,29 @@ const sizeVal=()=>$('#size').value.split('x').map(Number)
 
 let pend=null
 const ps=t=>{$('#ps').textContent=t}
-const dropPend=()=>{if(pend){clearTimeout(pend.t1);clearTimeout(pend.t2);pend.es&&pend.es.close();pend=null}}
-const cancelPair=()=>{if(pend&&pend.link)pend.link.close();dropPend();show('menu')}
+const dropPend=()=>{if(pend){clearTimeout(pend.t1);clearTimeout(pend.t2);clearTimeout(pend.t3);pend.es&&pend.es.close();pend=null;$('#man').classList.add('hide')}}
+const showMan=(m,link,off)=>{
+MN.m=m;MN.link=link
+$('#man').classList.remove('hide')
+$('#mo').value=off||'';$('#mi').value=''
+$('#mo').placeholder=m==='host'?'':'Kode jawaban muncul di sini';$('#mi').placeholder=m==='host'?'Tempel kode jawaban dari teman':'Tempel kode undangan dari host'
+}
+const MN={m:'',link:null}
+const guestData=link=>d=>{if(d.t==='init'){dropPend();startStudio({mode:'duo',role:'guest',w:+d.w,h:+d.h,dur:+d.dur||0},link);S.opp=sanP(d.p);updOpp();link.send({t:'hello',p:prof()})}}
+$('#mc').onclick=()=>{const t=$('#mo');t.select();navigator.clipboard&&navigator.clipboard.writeText(t.value).catch(()=>{});try{document.execCommand('copy')}catch(x){}toast('Disalin')}
+$('#mb').onclick=()=>{dropPend();showMan('guest')}
+$('#mg').onclick=async()=>{
+const c=$('#mi').value.trim()
+if(!c)return
+if(MN.m==='host'){try{await MN.link.accept(c);ps('Menghubungkan...')}catch(x){ps('Kode tidak valid')}return}
+dropPend()
+$('#man').classList.remove('hide')
+const link=new Link()
+link.on.data=guestData(link)
+pend={link}
+try{$('#mo').value=await link.answerTo(c);ps('Salin kode jawaban ke host, lalu tunggu terhubung...');pend.t2=setTimeout(()=>{link.close();dropPend();ps('Gagal terhubung, coba lagi')},60000)}catch(x){link.close();ps('Kode tidak valid')}
+}
+const cancelPair=()=>{if(pend&&pend.code)sigPost(pend.code,{k:'bye'}).catch(()=>{});if(pend&&pend.link)pend.link.close();dropPend();show('menu')}
 $('#back').onclick=cancelPair
 
 const restore=async d=>{
@@ -1391,7 +1471,8 @@ await restore({w:o.w,h:o.h,nid:o.nid,a:o.a,l})
 $('#host').onclick=async()=>{
 const[w,h]=sizeVal(),link=new Link(),code=randCode(),dur=+$('#dur').value*60,me=prof()
 dropPend()
-pend={link}
+pend={link,code}
+$('#mb').classList.add('hide')
 $('#pt').textContent='Room Duo';$('#p1').textContent='Berikan kode ini ke temanmu.'
 $('#code').textContent=code;$('#code').classList.remove('hide')
 $('#jin').classList.add('hide');$('#go').classList.add('hide')
@@ -1399,7 +1480,7 @@ ps('Menyiapkan room...')
 show('pair')
 let done=false
 link.on.open=()=>{
-dropPend()
+dropPend();sigPost(code,{k:'bye'}).catch(()=>{})
 startStudio({mode:'duo',role:'host',w,h,dur},link)
 link.send({t:'init',w,h,dur,p:me})
 }
@@ -1408,26 +1489,31 @@ if(m.k!=='answer'||done)return
 done=true
 try{await link.accept(m.s);ps('Teman bergabung, menghubungkan...')}catch(x){done=false}
 })
+let off
 try{
-const off=await link.offer()
+off=await link.offer()
 await sigPost(code,{k:'offer',s:off})
 ps('Menunggu teman memasukkan kode...')
-}catch(x){ps('Gagal membuat room. Periksa koneksi internet.')}
+if(pend&&pend.link===link)pend.t3=setTimeout(()=>showMan('host',link,off),20000)
+}catch(x){
+if(off){ps('Server sinyal gagal. Pakai kode manual di bawah.');showMan('host',link,off)}else ps('Gagal membuat room. Periksa koneksi internet.')
+}
 }
 
 $('#join').onclick=()=>{
 dropPend()
-$('#pt').textContent='Gabung Room Duo';$('#p1').textContent='Masukkan kode 5 huruf dari temanmu.'
+$('#pt').textContent='Gabung Room Duo';$('#p1').textContent='Masukkan kode 6 huruf dari temanmu.'
 $('#code').classList.add('hide')
 $('#jin').classList.remove('hide');$('#go').classList.remove('hide');$('#go').disabled=false
 $('#jin').value='';ps('')
+$('#mb').classList.remove('hide')
 show('pair')
 }
-$('#jin').oninput=e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,5)}
+$('#jin').oninput=e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)}
 
 $('#go').onclick=()=>{
 const code=$('#jin').value
-if(code.length!==5){ps('Kode harus 5 karakter');return}
+if(code.length!==6){ps('Kode harus 6 karakter');return}
 dropPend()
 const link=new Link()
 pend={link}
@@ -1435,10 +1521,9 @@ let joined=false
 const fail=t=>{ps(t);joined=false;dropPend();$('#go').disabled=false}
 $('#go').disabled=true
 ps('Mencari room...')
-link.on.data=d=>{
-if(d.t==='init'){dropPend();startStudio({mode:'duo',role:'guest',w:+d.w,h:+d.h,dur:+d.dur||0},link);S.opp=sanP(d.p);updOpp();link.send({t:'hello',p:prof()})}
-}
+link.on.data=guestData(link)
 pend.es=sigListen(code,true,m=>{
+if(m.k==='bye'&&!joined){clearTimeout(pend.t1);return}
 if(m.k!=='offer'||joined)return
 clearTimeout(pend.t1)
 pend.t1=setTimeout(async()=>{
@@ -1463,9 +1548,9 @@ document.addEventListener('gesturestart',lock)
 document.addEventListener('gesturechange',lock)
 document.addEventListener('gestureend',lock)
 document.addEventListener('contextmenu',e=>{if(e.target===cv)e.preventDefault()})
-document.addEventListener('touchmove',e=>{if(e.touches.length>1||!e.target.closest('#msgs,#lr,#rvc,#bl,#sr,textarea,input[type=range]'))e.preventDefault()},{passive:false})
+document.addEventListener('touchmove',e=>{if(e.touches.length>1||!e.target.closest('#msgs,#lr,#rvc,#bl,#sr,.card,textarea,input[type=range]'))e.preventDefault()},{passive:false})
 document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})
-document.addEventListener('wheel',e=>{if(e.ctrlKey||!e.target.closest('#msgs,#lr,#rvc,#bl,#sr,textarea,input[type=range]'))e.preventDefault()},{passive:false})
+document.addEventListener('wheel',e=>{if(e.ctrlKey||!e.target.closest('#msgs,#lr,#rvc,#bl,#sr,.card,textarea,input[type=range]'))e.preventDefault()},{passive:false})
 document.addEventListener('dblclick',lock)
 addEventListener('scroll',()=>scrollTo(0,0))
 addEventListener('keydown',e=>{
