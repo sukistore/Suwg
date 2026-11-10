@@ -125,8 +125,6 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 .bi.on{background:#eef2ff;border-color:#4f46e5;color:#4f46e5}
 .bg{grid-column:1/3;font-size:11px;font-weight:700;color:#64748b;padding:6px 2px 0}
 #sr{justify-content:flex-start;max-height:60dvh;overflow-y:auto;touch-action:pan-y}
-#man{display:flex;flex-direction:column;gap:10px}
-#man textarea{height:56px}
 #pair .card{max-height:100%;overflow-y:auto}
 </style>
 </head>
@@ -175,11 +173,9 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke
 <h2 id="pt"></h2>
 <p id="p1"></p>
 <div id="code"></div>
-<input id="jin" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KODE">
+<input id="jin" maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KODE">
 <button class="btn pri" id="go">Gabung</button>
 <p id="ps" style="text-align:center"></p>
-<button class="btn hide" id="mb">Gabung manual (tanpa server)</button>
-<div id="man" class="hide"><textarea id="mo" readonly></textarea><button class="btn" id="mc">Salin kode</button><textarea id="mi"></textarea><button class="btn pri" id="mg">Hubungkan</button></div>
 <button class="btn" id="back">Kembali</button>
 </div>
 </div>
@@ -1170,6 +1166,7 @@ szUi()
 $('#sbtn').onclick=()=>{
 const box=$('#sr')
 box.innerHTML=''
+;$('#bor').innerHTML=''
 ;mkRow($('#bor'),'Opasitas',100,()=>S.op,v=>{S.op=Math.max(5,v);saveCfg();pvw()})
 ;[['Stabilisator','stab'],['Awal kuas','ti'],['Akhir kuas','to'],['Kurva tekanan','pc'],['Peka kecepatan','sv'],['Taper otomatis','at'],['Jarak titik','ts'],['Kepadatan tone','td'],['Sudut tone','ta'],['Toleransi sihir','tol']].forEach(([l,k])=>mkRow(box,l,100,()=>S[k],v=>{S[k]=v;saveCfg()}))
 $('#spd').classList.remove('hide')
@@ -1408,7 +1405,7 @@ $('#rx').onclick=exitStudio
 
 const NT='https:' +'/'+'/ntfy.sh/'
 const ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-const randCode=()=>Array.from({length:6},()=>ALPHA[Math.floor(Math.random()*ALPHA.length)]).join('')
+const randCode=()=>Array.from({length:5},()=>ALPHA[Math.floor(Math.random()*ALPHA.length)]).join('')
 const sigPost=async(c,o)=>{
 const b=JSON.stringify(o)
 if(b.length>3900)throw new Error('big')
@@ -1434,28 +1431,8 @@ return[w,h]
 
 let pend=null
 const ps=t=>{$('#ps').textContent=t}
-const dropPend=()=>{if(pend){clearTimeout(pend.t1);clearTimeout(pend.t2);clearTimeout(pend.t3);pend.es&&pend.es.close();pend=null;$('#man').classList.add('hide')}}
-const showMan=(m,link,off)=>{
-MN.m=m;MN.link=link
-$('#man').classList.remove('hide')
-$('#mo').value=off||'';$('#mi').value=''
-$('#mo').placeholder=m==='host'?'':'Kode jawaban muncul di sini';$('#mi').placeholder=m==='host'?'Tempel kode jawaban dari teman':'Tempel kode undangan dari host'
-}
-const MN={m:'',link:null}
+const dropPend=()=>{if(pend){clearTimeout(pend.t1);clearTimeout(pend.t2);clearTimeout(pend.t3);pend.es&&pend.es.close();pend=null}}
 const guestData=link=>d=>{if(d.t==='init'){dropPend();startStudio({mode:'duo',role:'guest',w:+d.w,h:+d.h,dur:+d.dur||0},link);S.opp=sanP(d.p);updOpp();link.send({t:'hello',p:prof()})}}
-$('#mc').onclick=()=>{const t=$('#mo');t.select();navigator.clipboard&&navigator.clipboard.writeText(t.value).catch(()=>{});try{document.execCommand('copy')}catch(x){}toast('Disalin')}
-$('#mb').onclick=()=>{dropPend();showMan('guest')}
-$('#mg').onclick=async()=>{
-const c=$('#mi').value.trim()
-if(!c)return
-if(MN.m==='host'){try{await MN.link.accept(c);ps('Menghubungkan...')}catch(x){ps('Kode tidak valid')}return}
-dropPend()
-$('#man').classList.remove('hide')
-const link=new Link()
-link.on.data=guestData(link)
-pend={link}
-try{$('#mo').value=await link.answerTo(c);ps('Salin kode jawaban ke host, lalu tunggu terhubung...');pend.t2=setTimeout(()=>{link.close();dropPend();ps('Gagal terhubung, coba lagi')},60000)}catch(x){link.close();ps('Kode tidak valid')}
-}
 const cancelPair=()=>{if(pend&&pend.code)sigPost(pend.code,{k:'bye'}).catch(()=>{});if(pend&&pend.link)pend.link.close();dropPend();show('menu')}
 $('#back').onclick=cancelPair
 
@@ -1504,7 +1481,6 @@ if($('#size').value==='custom'){const[cw,ch]=sizeVal();if(cw*ch>1500000)return t
 const[w,h]=sizeVal(),link=new Link(),code=randCode(),dur=+$('#dur').value*60,me=prof()
 dropPend()
 pend={link,code}
-$('#mb').classList.add('hide')
 $('#pt').textContent='Room Duo';$('#p1').textContent='Berikan kode ini ke temanmu.'
 $('#code').textContent=code;$('#code').classList.remove('hide')
 $('#jin').classList.add('hide');$('#go').classList.add('hide')
@@ -1526,26 +1502,24 @@ try{
 off=await link.offer()
 await sigPost(code,{k:'offer',s:off})
 ps('Menunggu teman memasukkan kode...')
-if(pend&&pend.link===link)pend.t3=setTimeout(()=>showMan('host',link,off),20000)
 }catch(x){
-if(off){ps('Server sinyal gagal. Pakai kode manual di bawah.');showMan('host',link,off)}else ps('Gagal membuat room. Periksa koneksi internet.')
+ps('Gagal membuat room. Periksa koneksi internet.')
 }
 }
 
 $('#join').onclick=()=>{
 dropPend()
-$('#pt').textContent='Gabung Room Duo';$('#p1').textContent='Masukkan kode 6 huruf dari temanmu.'
+$('#pt').textContent='Gabung Room Duo';$('#p1').textContent='Masukkan kode 5 huruf/angka dari temanmu.'
 $('#code').classList.add('hide')
 $('#jin').classList.remove('hide');$('#go').classList.remove('hide');$('#go').disabled=false
 $('#jin').value='';ps('')
-$('#mb').classList.remove('hide')
 show('pair')
 }
-$('#jin').oninput=e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)}
+$('#jin').oninput=e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,5)}
 
 $('#go').onclick=()=>{
 const code=$('#jin').value
-if(code.length!==6){ps('Kode harus 6 karakter');return}
+if(code.length!==5){ps('Kode harus 5 karakter');return}
 dropPend()
 const link=new Link()
 pend={link}
