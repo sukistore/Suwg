@@ -622,13 +622,15 @@ bd.innerHTML='';bd.appendChild(card);bd.classList.remove('hide')
 }
 
 const V={z:1,x:0,y:0,k:1,r:0}
+const cwEl=$('#cw'),lysEl=$('#lys'),zrEl=$('#zr'),AV={ir:'',zt:''}
 const applyV=()=>{
 const m=$('#mid'),c=Math.cos(V.r),s=Math.sin(V.r),W=S.w*V.k*V.z,H=S.h*V.k*V.z
 const x0=Math.min(0,W*c,W*c-H*s,-H*s),x1=Math.max(0,W*c,W*c-H*s,-H*s),y0=Math.min(0,W*s,W*s+H*c,H*c),y1=Math.max(0,W*s,W*s+H*c,H*c)
 V.x=Math.min(m.clientWidth-40-x0,Math.max(40-x1,V.x));V.y=Math.min(m.clientHeight-40-y0,Math.max(40-y1,V.y))
-$('#cw').style.transform='translate('+V.x+'px,'+V.y+'px) rotate('+V.r+'rad) scale('+V.z+')'
-$('#lys').style.imageRendering=V.z*V.k>2?'pixelated':'auto'
-$('#zr').textContent=Math.round(V.z*V.k*100)+'%'
+cwEl.style.transform='translate('+V.x+'px,'+V.y+'px) rotate('+V.r+'rad) scale('+V.z+')'
+const ir=V.z*V.k>2?'pixelated':'auto',zt=Math.round(V.z*V.k*100)+'%'
+if(AV.ir!==ir){AV.ir=ir;lysEl.style.imageRendering=ir}
+if(AV.zt!==zt){AV.zt=zt;zrEl.textContent=zt}
 }
 const fit=()=>{
 const m=$('#mid'),k=Math.max(.05,Math.min((m.clientWidth-24)/S.w,(m.clientHeight-24)/S.h,2)),w=$('#cw')
@@ -1589,7 +1591,7 @@ const NS='http://www.w3.org/2000/svg'
 const R={c:false,m:false,w:0,h:0,cx:0,cy:0,r:0,ca:0,mx:0,my:0,ma:Math.PI/2,sn:false,la:0,ac:false,mi:null}
 const cw=$('#cw'),cols=$('#cols'),z=()=>V.k*V.z
 const stl=document.createElement('style')
-stl.textContent='.ib.ron{background:#4f46e5;color:#fff}#rls{position:absolute;z-index:10;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}#rls .hd{pointer-events:auto;cursor:grab;touch-action:none}'
+stl.textContent='.ib.ron{background:#4f46e5;color:#fff}#rls{position:absolute;z-index:10;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;will-change:transform}#rls .hd{pointer-events:auto;cursor:grab;touch-action:none}'
 document.head.appendChild(stl)
 const svg=document.createElementNS(NS,'svg')
 svg.id='rls';cw.appendChild(svg)
@@ -1605,13 +1607,16 @@ if(R.w===S.w&&R.h===S.h)return
 R.w=S.w;R.h=S.h;R.cx=S.w/2;R.cy=S.h/2;R.r=Math.min(S.w,S.h)*.3;R.ca=0;R.mx=S.w/2;R.my=S.h*.12;R.ma=Math.PI/2
 }
 const setA=(e,a)=>{for(const k in a)e.setAttribute(k,a[k])}
+let vbk=''
 const draw=()=>{
 ensure()
-const u=1/z(),sw=2*u
-svg.setAttribute('viewBox','0 0 '+S.w+' '+S.h)
-circ.style.display=hc.style.display=he.style.display=R.c?'':'none'
-axis.style.display=hm.style.display=hr.style.display=R.m?'':'none'
+const vb='0 0 '+S.w+' '+S.h
+if(vbk!==vb){vbk=vb;svg.setAttribute('viewBox',vb)}
+const dc=R.c?'':'none',dm=R.m?'':'none'
+if(circ.style.display!==dc)circ.style.display=hc.style.display=he.style.display=dc
+if(axis.style.display!==dm)axis.style.display=hm.style.display=hr.style.display=dm
 if(!R.c&&!R.m)return
+const u=1/z(),sw=2*u
 if(R.c){
 setA(circ,{cx:R.cx,cy:R.cy,r:R.r,'stroke-width':1.5*u})
 setA(hc,{cx:R.cx,cy:R.cy,r:14*u,'stroke-width':sw})
